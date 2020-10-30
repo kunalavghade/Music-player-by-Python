@@ -48,17 +48,28 @@ class GroveMusic():
 		self.line = PhotoImage(file="asset/lines.png")
 		self.fullViweBtn = Button(self.bar, bg = "#313131",activebackground="#626262",text = "=",activeforeground="#fff",borderwidth=0, command = self.resizeViwe,image = self.line)
 		self.fullViweBtn.place(rely = 0.1, relwidth = 1,relheight=0.09)
+		# -------------------------------------------------- Arrow Icon --------------------------------------------------------------
+		self.arrowIcon = PhotoImage(file="asset/Arrow.png")
+		self.arrowFrame = Frame(self.bar,bg="#313131")
+		# Search button
+		self.arrow = Button(self.arrowFrame,image=self.arrowIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
+		self.arrow.grid(row = 0 ,column =0)
+		# serch input
+		self.Grove = Label(self.arrowFrame,bg="#313131",font="arial 12 ",bd=0,text="Groove music                                            ",fg="#fff",pady=7)
+		self.Grove.grid(row=0,column=1)
+		self.arrowFrame.place(rely=0.01,relwidth=1,relheight=0.09)
+		# --------------------------------------------------------------------------------------------------------------------------------
 		#------------------------------------------- Search Frame----------------------------------------------------------------
 		self.searchIcon = PhotoImage(file = "asset/search.png")
 		self.searchIconDark = PhotoImage(file = "asset/searchP.png")
-		self.searchFrame = Frame(self.bar,bg="#fff")
+		self.searchFrame = Frame(self.bar,bg="#212121")
 		# Search button
 		self.searchBtn = Button(self.searchFrame,image=self.searchIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command = self.resizeViwe)
 		self.searchBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.entry = Entry(self.searchFrame,bg="#fff",width=23,font="arial 15",bd=0)
+		self.entry = Entry(self.searchFrame,bg="#212121",width=28,font="arial 12",bd=0,fg="#fff",)
 		self.entry.grid(row=0,column=1)
-		self.searchFrame.place(rely=0.2,relwidth=1,relheight=0.09)
+		self.searchFrame.place(rely=0.2,relwidth=1,relheight=0.08)
 		# -------------------------------------------------------------------------------------------------------------------------
 		# -------------------------------------------------- music Icon --------------------------------------------------------------
 		self.musicIcon = PhotoImage(file="asset/music.png")
@@ -112,6 +123,7 @@ class GroveMusic():
 		self.settings.grid(row=0,column=1)
 		self.settingFrame.place(rely=0.9,relwidth=1,relheight=0.09)
 		# ----------------------------------------------------------------------------------------------------------------------------
+	
 	# fuction bar scalling
 	def resizeViwe(self):
 		if self.cliked:
@@ -123,7 +135,6 @@ class GroveMusic():
 			self.fullViwe()
 			self.searchBtn.configure(command= self.searchFunc)
 			print(self.width)
-
 		else :
 			for i in range(0,341):
 				self.width = (400-i)/1000
@@ -138,7 +149,7 @@ class GroveMusic():
 	def fullViwe(self):
 		self.fullViweBtn.place_configure(relwidth=0.15)
 		self.searchFrame.place_configure(relwidth=0.94,relx=0.03)
-		self.searchBtn.configure(bg = "#fff",activebackground="#FFF",activeforeground="#AAA",image = self.searchIconDark)
+		self.searchBtn.configure(bg = "#212121",activebackground="#FFF",activeforeground="#AAA",image = self.searchIconDark)
 		self.entry.grid_configure(row = 0 ,column=0)
 		self.partitionFrame.place_configure(relx=0.05,rely=0.89,relheight = 0.001,relwidth=0.9)
 		self.partitionFrame1.place_configure(relx=0.05,rely=0.5,relheight = 0.001,relwidth=0.9)
@@ -157,6 +168,7 @@ class GroveMusic():
 	# serching music
 	def searchFunc(self):
 		pass
+
 
 if __name__ == "__main__":
 	GroveMusic()
