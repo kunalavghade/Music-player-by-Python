@@ -1,4 +1,5 @@
 from tkinter import *
+import musicList as m
 
 class GroveMusic():
 	# initialize root window 
@@ -167,8 +168,7 @@ class GroveMusic():
 
 	# serching music
 	def searchFunc(self):
-		pass
-
+		m.MusicLive(self.listFrame)
 
 if __name__ == "__main__":
 	GroveMusic()
