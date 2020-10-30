@@ -1,5 +1,7 @@
 from tkinter import *
+import recent as r
 import musicList as m
+import searchWin as s
 
 class GroveMusic():
 	# initialize root window 
@@ -36,8 +38,10 @@ class GroveMusic():
 		self.bar = Frame(self.window,bg="#313131")
 		self.barFunc()
 		self.bar.place(relheight=0.83,relwidth=self.width)
-
 		self.listFrame = Frame(self.window,bg="black")
+		self.MusicList = Frame(self.listFrame,bg="black")
+		self.musicFunc()
+		self.MusicList.place(relheight=1,relwidth=1)
 		self.listFrame.place(relheight = self.height,relwidth = (1-self.width),relx = self.width)
 
 		self.playerFrame = Frame(self.window,bg = "#005099")
@@ -76,23 +80,23 @@ class GroveMusic():
 		self.musicIcon = PhotoImage(file="asset/music.png")
 		self.musicFrame = Frame(self.bar,bg="#313131")
 		# Search button
-		self.musicBtn = Button(self.musicFrame,image=self.musicIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
+		self.musicBtn = Button(self.musicFrame,image=self.musicIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.musicFunc)
 		self.musicBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.muMusic = Button(self.musicFrame,bg="#313131",font="arial 12 ",bd=0,text="My music                                              ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
+		self.muMusic = Button(self.musicFrame,bg="#313131",font="arial 12 ",bd=0,text="My music                                              ",fg="#fff",activebackground="#626262",activeforeground="#fff",command=self.musicFunc)
 		self.muMusic.grid(row=0,column=1)
 		self.musicFrame.place(rely=0.3,relwidth=1,relheight=0.09)
 		# -----------------------------------------------------------------------------------------------------------------------------
-		# -------------------------------------------------- resent Icon --------------------------------------------------------------
-		self.resentIcon = PhotoImage(file="asset/resent.png")
-		self.resentFrame = Frame(self.bar,bg="#313131")
+		# -------------------------------------------------- recent Icon --------------------------------------------------------------
+		self.recentIcon = PhotoImage(file="asset/resent.png")
+		self.recentFrame = Frame(self.bar,bg="#313131")
 		# Search button
-		self.resentBtn = Button(self.resentFrame,image=self.resentIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
-		self.resentBtn.grid(row = 0 ,column =0)
+		self.recentBtn = Button(self.recentFrame,image=self.recentIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.recent)
+		self.recentBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.resent = Button(self.resentFrame,bg="#313131",font="arial 12 ",bd=0,text="Recent playes                                      ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
-		self.resent.grid(row=0,column=1)
-		self.resentFrame.place(rely=0.4,relwidth=1,relheight=0.09)
+		self.recent = Button(self.recentFrame,bg="#313131",font="arial 12 ",bd=0,text="Recent playes                                      ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,command=self.recent)
+		self.recent.grid(row=0,column=1)
+		self.recentFrame.place(rely=0.4,relwidth=1,relheight=0.09)
 		# -----------------------------------------------------------------------------------------------------------------------------
 		# -----------------------------------------------------partition------------------------------------
 		self.partitionFrame1 = Frame(self.bar,bg="#fff")
@@ -105,7 +109,7 @@ class GroveMusic():
 		self.playingBtn = Button(self.playingFrame,image=self.playingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
 		self.playingBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.playing = Button(self.playingFrame,bg="#313131",font="arial 12 ",bd=0,text="Recent playes                                      ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
+		self.playing = Button(self.playingFrame,bg="#313131",font="arial 12 ",bd=0,text="Now playing                                       ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
 		self.playing.grid(row=0,column=1)
 		self.playingFrame.place(rely=0.51,relwidth=1,relheight=0.09)
 		# -----------------------------------------------------------------------------------------------------
@@ -168,7 +172,22 @@ class GroveMusic():
 
 	# serching music
 	def searchFunc(self):
-		m.MusicLive(self.listFrame)
+		self.MusicList.destroy()
+		self.MusicList = Frame(self.listFrame,bg="black")
+		s.SearchWin(self.MusicList)
+		self.MusicList.place(relheight=1,relwidth=1)
+
+	def musicFunc(self):
+		self.MusicList.destroy()
+		self.MusicList = Frame(self.listFrame,bg="black")
+		m.MusicLive(self.MusicList)
+		self.MusicList.place(relheight=1,relwidth=1)
+
+	def recent(self):
+		self.MusicList.destroy()
+		self.MusicList = Frame(self.listFrame,bg="black")
+		r.RecentWin(self.MusicList)
+		self.MusicList.place(relheight=1,relwidth=1)
 
 if __name__ == "__main__":
 	GroveMusic()
