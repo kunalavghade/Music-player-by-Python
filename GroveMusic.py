@@ -48,21 +48,70 @@ class GroveMusic():
 		self.line = PhotoImage(file="asset/lines.png")
 		self.fullViweBtn = Button(self.bar, bg = "#313131",activebackground="#626262",text = "=",activeforeground="#fff",borderwidth=0, command = self.resizeViwe,image = self.line)
 		self.fullViweBtn.place(rely = 0.1, relwidth = 1,relheight=0.09)
-
-		# Search Frame
+		#------------------------------------------- Search Frame----------------------------------------------------------------
 		self.searchIcon = PhotoImage(file = "asset/search.png")
+		self.searchIconDark = PhotoImage(file = "asset/searchP.png")
 		self.searchFrame = Frame(self.bar,bg="#fff")
-
 		# Search button
 		self.searchBtn = Button(self.searchFrame,image=self.searchIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command = self.resizeViwe)
 		self.searchBtn.grid(row = 0 ,column =0)
-
 		# serch input
 		self.entry = Entry(self.searchFrame,bg="#fff",width=23,font="arial 15",bd=0)
 		self.entry.grid(row=0,column=1)
-
 		self.searchFrame.place(rely=0.2,relwidth=1,relheight=0.09)
-
+		# -------------------------------------------------------------------------------------------------------------------------
+		# -------------------------------------------------- music Icon --------------------------------------------------------------
+		self.musicIcon = PhotoImage(file="asset/music.png")
+		self.musicFrame = Frame(self.bar,bg="#313131")
+		# Search button
+		self.musicBtn = Button(self.musicFrame,image=self.musicIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
+		self.musicBtn.grid(row = 0 ,column =0)
+		# serch input
+		self.muMusic = Button(self.musicFrame,bg="#313131",font="arial 12 ",bd=0,text="My music                                              ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
+		self.muMusic.grid(row=0,column=1)
+		self.musicFrame.place(rely=0.3,relwidth=1,relheight=0.09)
+		# -----------------------------------------------------------------------------------------------------------------------------
+		# -------------------------------------------------- resent Icon --------------------------------------------------------------
+		self.resentIcon = PhotoImage(file="asset/resent.png")
+		self.resentFrame = Frame(self.bar,bg="#313131")
+		# Search button
+		self.resentBtn = Button(self.resentFrame,image=self.resentIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
+		self.resentBtn.grid(row = 0 ,column =0)
+		# serch input
+		self.resent = Button(self.resentFrame,bg="#313131",font="arial 12 ",bd=0,text="Recent playes                                      ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
+		self.resent.grid(row=0,column=1)
+		self.resentFrame.place(rely=0.4,relwidth=1,relheight=0.09)
+		# -----------------------------------------------------------------------------------------------------------------------------
+		# -----------------------------------------------------partition------------------------------------
+		self.partitionFrame1 = Frame(self.bar,bg="#fff")
+		self.partitionFrame1.place()
+		# -------------------------------------------------------------------------------------------------
+		# ------------------------------------------- Now Playing -------------------------------------------
+		self.playingIcon = PhotoImage(file="asset/NowPlaying.png")
+		self.playingFrame = Frame(self.bar,bg="#313131")
+		# Search button
+		self.playingBtn = Button(self.playingFrame,image=self.playingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
+		self.playingBtn.grid(row = 0 ,column =0)
+		# serch input
+		self.playing = Button(self.playingFrame,bg="#313131",font="arial 12 ",bd=0,text="Recent playes                                      ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
+		self.playing.grid(row=0,column=1)
+		self.playingFrame.place(rely=0.51,relwidth=1,relheight=0.09)
+		# -----------------------------------------------------------------------------------------------------
+		# -----------------------------------------------------partition------------------------------------
+		self.partitionFrame = Frame(self.bar,bg="#fff")
+		self.partitionFrame.place()
+		# -------------------------------------------------------------------------------------------------
+		# -------------------------------------------------- Setting Icon --------------------------------------------------------------
+		self.settingIcon = PhotoImage(file="asset/setting.png")
+		self.settingFrame = Frame(self.bar,bg="#313131")
+		# setting button
+		self.settingBtn = Button(self.settingFrame,image=self.settingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
+		self.settingBtn.grid(row = 0 ,column =0)
+		# seting input
+		self.settings = Button(self.settingFrame,bg="#313131",font="arial 12 ",bd=0,text="Settings                                              ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
+		self.settings.grid(row=0,column=1)
+		self.settingFrame.place(rely=0.9,relwidth=1,relheight=0.09)
+		# ----------------------------------------------------------------------------------------------------------------------------
 	# fuction bar scalling
 	def resizeViwe(self):
 		if self.cliked:
@@ -89,15 +138,20 @@ class GroveMusic():
 	def fullViwe(self):
 		self.fullViweBtn.place_configure(relwidth=0.15)
 		self.searchFrame.place_configure(relwidth=0.94,relx=0.03)
-		self.searchBtn.configure(bg = "#fff",activebackground="#FFF",activeforeground="#AAA")
+		self.searchBtn.configure(bg = "#fff",activebackground="#FFF",activeforeground="#AAA",image = self.searchIconDark)
 		self.entry.grid_configure(row = 0 ,column=0)
+		self.partitionFrame.place_configure(relx=0.05,rely=0.89,relheight = 0.001,relwidth=0.9)
+		self.partitionFrame1.place_configure(relx=0.05,rely=0.5,relheight = 0.001,relwidth=0.9)
 		self.searchBtn.grid_configure(row = 0 ,column=1)
 
 	# minimized bar (function)
 	def smallViwe(self):
 		self.searchFrame.place_configure(relwidth=1,relx=0)
 		self.fullViweBtn.place_configure(relwidth=1)
+		self.searchBtn.configure(image=self.searchIcon,bg = "#313131",activebackground="#626262",activeforeground="#fff")
 		self.entry.grid_configure(row = 0 ,column=1)
+		self.partitionFrame.place_configure(relx=0.,rely=1,relheight= 0,relwidth=0)
+		self.partitionFrame1.place_configure(relx=0.,rely=1,relheight= 0,relwidth=0)
 		self.searchBtn.grid_configure(row = 0 ,column=0)
 
 	# serching music
