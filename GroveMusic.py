@@ -1,7 +1,9 @@
 from tkinter import *
+import bottomBar as bb
 import recent as r
 import musicList as m
 import searchWin as s
+import nowPlaying as np
 
 class GroveMusic():
 	# initialize root window 
@@ -11,6 +13,7 @@ class GroveMusic():
 		self.window.title("Grove Music")
 		self.window.geometry("800x650+270+60")
 		self.window.wm_overrideredirect(True)
+
 		self.window.resizable(False,False)
 		self.starting()
 		self.window.mainloop()
@@ -33,18 +36,21 @@ class GroveMusic():
 
 	# create functionnig window
 	def mainWindow(self):
+		self.windowSub = Frame(self.window)
+		self.windowSub.place(relwidth=1,relheight=1)
 		self.height = 0.83
 		self.width = 0.06
-		self.bar = Frame(self.window,bg="#313131")
+		self.bar = Frame(self.windowSub,bg="#313131")
 		self.barFunc()
 		self.bar.place(relheight=0.83,relwidth=self.width)
-		self.listFrame = Frame(self.window,bg="black")
+		self.listFrame = Frame(self.windowSub,bg="black")
 		self.MusicList = Frame(self.listFrame,bg="black")
 		self.musicFunc()
 		self.MusicList.place(relheight=1,relwidth=1)
 		self.listFrame.place(relheight = self.height,relwidth = (1-self.width),relx = self.width)
 
-		self.playerFrame = Frame(self.window,bg = "#005099")
+		self.playerFrame = Frame(self.windowSub,bg = "#005099")
+		bb.BottomBar(self.playerFrame)
 		self.playerFrame.place(relheight = (1-self.height),relwidth = 1,rely = self.height)
 
 	# function bar creation
@@ -106,10 +112,10 @@ class GroveMusic():
 		self.playingIcon = PhotoImage(file="asset/NowPlaying.png")
 		self.playingFrame = Frame(self.bar,bg="#313131")
 		# Search button
-		self.playingBtn = Button(self.playingFrame,image=self.playingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
+		self.playingBtn = Button(self.playingFrame,image=self.playingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.NowPlayingFunc)
 		self.playingBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.playing = Button(self.playingFrame,bg="#313131",font="arial 12 ",bd=0,text="Now playing                                       ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,)
+		self.playing = Button(self.playingFrame,bg="#313131",font="arial 12 ",bd=0,text="Now playing                                       ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,command=self.NowPlayingFunc)
 		self.playing.grid(row=0,column=1)
 		self.playingFrame.place(rely=0.51,relwidth=1,relheight=0.09)
 		# -----------------------------------------------------------------------------------------------------
@@ -177,17 +183,32 @@ class GroveMusic():
 		s.SearchWin(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
 
+	# music window creation
 	def musicFunc(self):
 		self.MusicList.destroy()
 		self.MusicList = Frame(self.listFrame,bg="black")
 		m.MusicLive(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
 
+	# recent window creation
 	def recent(self):
 		self.MusicList.destroy()
 		self.MusicList = Frame(self.listFrame,bg="black")
 		r.RecentWin(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
+
+	def NowPlayingFunc(self):
+		self.windowSub.destroy()
+		self.fullListWindow = Frame(self.window,bg="red")
+		self.fullListWindow.place(relheight=1,relwidth=1)
+		self.cancelBtn = Button(self.window,text="click Me !",command=self.cancelBtnFunc)
+		self.cancelBtn.place(relx=0)
+		np.NowPlaying(self.fullListWindow)
+		
+	def cancelBtnFunc(self):
+		self.fullListWindow.destroy()
+		self.cancelBtn.destroy()
+		self.mainWindow()
 
 if __name__ == "__main__":
 	GroveMusic()
