@@ -1,17 +1,17 @@
 import os
 import sqlite3
 import eyed3
+import pygame.mixer as sp
+
 
 class MusicDataBase():
-	"""docstring for MusicDataBase"""
-	def __init__(self,a):
+	def __init__(self):
 		self.dir = "C:\\Programming\\Pythone\\Python Project\\music"
 		self.song = os.listdir(self.dir)
 		self.conn = sqlite3.connect("database.db")
 		self.cor = self.conn.cursor()
 		# self.createDataBase()
-		# self.detection()
-		self.getPath(a)
+		print("sss")
 
 	def createDataBase(self):
 		self.conn.execute('''CREATE TABLE "MusicLIB" (
@@ -67,9 +67,23 @@ class MusicDataBase():
 
 	def getPath(self,no):
 		query=self.cor.execute(f"select  Path , SongName , ext from 'MusicLIB' where No ='{no}'").fetchall()
-		print(query)
+		return query
 
 
-a=input("enter row name : ")
+	def getSongName(self,no):
+		query=self.conn.execute(f"select SongName ,Artist,Album from 'MusicLIB' where No ='{no}'").fetchall()
+		return query
 
-MusicDataBase(a)
+
+	def playFile(self,path):
+		sp.init()
+		sp.music.load(path)
+		sp.music.play(loops=0)
+
+	def getLength(self):
+		query=self.conn.execute('''SELECT COUNT(*) FROM (SELECT "_rowid_",* FROM "main"."MusicLIB");''').fetchall()
+		return query
+		
+
+	# def stop
+

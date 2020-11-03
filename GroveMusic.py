@@ -1,5 +1,4 @@
 from tkinter import *
-import bottomBar as bb
 import recent as r
 import musicList as m
 import searchWin as s
@@ -10,6 +9,7 @@ class GroveMusic():
 	def __init__(self):
 		self.window = Tk()
 		self.cliked = True
+		self.middleBtnClick = True
 		self.window.title("Grove Music")
 		self.window.geometry("800x650+270+60")
 		self.window.wm_overrideredirect(True)
@@ -43,14 +43,16 @@ class GroveMusic():
 		self.bar = Frame(self.windowSub,bg="#313131")
 		self.barFunc()
 		self.bar.place(relheight=0.83,relwidth=self.width)
+
 		self.listFrame = Frame(self.windowSub,bg="black")
 		self.MusicList = Frame(self.listFrame,bg="black")
-		self.musicFunc()
+		m.MusicLive(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
 		self.listFrame.place(relheight = self.height,relwidth = (1-self.width),relx = self.width)
 
 		self.playerFrame = Frame(self.windowSub,bg = "#005099")
-		bb.BottomBar(self.playerFrame)
+		# bb.BottomBar(self.playerFrame)
+		self.bottomBar()
 		self.playerFrame.place(relheight = (1-self.height),relwidth = 1,rely = self.height)
 
 	# function bar creation
@@ -135,6 +137,21 @@ class GroveMusic():
 		self.settingFrame.place(rely=0.9,relwidth=1,relheight=0.09)
 		# ----------------------------------------------------------------------------------------------------------------------------
 	
+	def bottomBar(self):
+		self.pause = PhotoImage(file = "asset/pause.png")
+		self.play = PhotoImage(file = "asset/play.png")
+		self.songImage = Button(self.playerFrame,text="click Me!",)
+		self.songImage.place(relheight=1,relwidth=0.12)
+		self.songName  = Button(self.playerFrame,text="click Me 2 !")
+		self.songName.place(relwidth=0.2,relheight=1,relx=0.12)
+		self.backBtn = Button(self.playerFrame,text="backBtn")
+		self.backBtn.place(relheight=1,relwidth=0.1,relx=0.32)
+		self.middleBtn = Button(self.playerFrame,image=self.play,activebackground="#000",bg="#000",activeforeground="#000",borderwidth=0,command=self.middleBtnFunc)
+		self.middleBtn.place(relheight=1,relwidth=0.12,relx=0.42)
+		self.nextBtn = Button(self.playerFrame,text="nextBtn")
+		self.nextBtn.place(relheight=1,relwidth=0.1,relx=0.54)
+		
+
 	# fuction bar scalling
 	def resizeViwe(self):
 		if self.cliked:
@@ -196,6 +213,15 @@ class GroveMusic():
 		self.MusicList = Frame(self.listFrame,bg="black")
 		r.RecentWin(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
+
+	def middleBtnFunc(self):
+		if self.middleBtnClick == True:
+			self.middleBtn.configure(image=self.pause)
+			self.middleBtnClick = False
+		else:
+			self.middleBtn.configure(image=self.play)
+			self.middleBtnClick = True
+
 
 	def NowPlayingFunc(self):
 		self.windowSub.destroy()
