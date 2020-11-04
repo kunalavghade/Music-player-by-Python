@@ -85,5 +85,12 @@ class MusicDataBase():
 		return query
 		
 
-	# def stop
+	def stopFile(self):
+		sp.music.stop()
 
+
+	def pause(self):
+		sp.music.pause()
+
+	def unPause(self):
+		sp.music.unpause()
