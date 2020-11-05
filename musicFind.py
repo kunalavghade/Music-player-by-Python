@@ -6,13 +6,12 @@ import pygame.mixer as sp
 
 class MusicDataBase():
 	def __init__(self):
-		self.dir = "C:\\Programming\\Pythone\\Python Project\\music"
-		self.song = os.listdir(self.dir)
 		self.conn = sqlite3.connect("database.db")
 		self.cor = self.conn.cursor()
-		# self.createDataBase()
-		print("sss")
-
+		try:
+			self.createDataBase()
+		except:
+			pass
 	def createDataBase(self):
 		self.conn.execute('''CREATE TABLE "MusicLIB" (
 			"No"	INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,10 +33,12 @@ class MusicDataBase():
 		self.cor.execute(self.databaseCmd,(songName,artist,album,path,ext))
 		self.conn.commit()
 
-	def detection(self):
+	def detection(self,dirPath):
+		self.dir = dirPath
+		self.song = os.listdir(self.dir)
 		for track in self.song:
 			song_info = []
-			if track.endswith(".mp3") or track.endswith(".m4a"):
+			if track.endswith(".mp3") :
 				song_info.append(os.path.splitext(track)[0])  
 				abs_location = '%s/%s' %(self.dir,track)
 				track_info = eyed3.load(abs_location)
@@ -58,7 +59,8 @@ class MusicDataBase():
 					song_info.append('unknown artist')
 				song_info.append(self.dir)
 				song_info.append(os.path.splitext(track)[1])
-			self.upDateDataBase(song_info)			
+				print(song_info)
+				self.upDateDataBase(song_info)			
 
 	def selectSection(self,rowid,search):
 		query=self.cor.execute(f'''SELECT "_rowid_",* FROM "main"."MusicLIB" WHERE "{rowid}" LIKE"%{search}%"''').fetchall()
@@ -87,6 +89,10 @@ class MusicDataBase():
 
 	def stopFile(self):
 		sp.music.stop()
+
+	def delete_table(self):
+		self.conn.execute('''DROP TABLE "main"."MusicLIB";''')
+
 
 
 	def pause(self):
