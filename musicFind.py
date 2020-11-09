@@ -3,7 +3,6 @@ import sqlite3
 import eyed3
 import pygame.mixer as sp
 
-
 class MusicDataBase():
 	def __init__(self):
 		self.conn = sqlite3.connect("database.db")
@@ -12,12 +11,13 @@ class MusicDataBase():
 			self.createDataBase()
 		except:
 			pass
+
 	def createDataBase(self):
 		self.conn.execute('''CREATE TABLE "MusicLIB" (
 			"No"	INTEGER PRIMARY KEY AUTOINCREMENT,
 			"SongName"	TEXT,
 			"Artist"	TEXT,
-			"Album"	TEXT,
+			"Album"	TEXT, 
 			"Path" TEXT,
 			"ext" TEXT
 		);''')
@@ -66,26 +66,27 @@ class MusicDataBase():
 		query=self.cor.execute(f'''SELECT "_rowid_",* FROM "main"."MusicLIB" WHERE "{rowid}" LIKE"%{search}%"''').fetchall()
 		print(query)
 
-
 	def getPath(self,no):
 		query=self.cor.execute(f"select  Path , SongName , ext from 'MusicLIB' where No ='{no}'").fetchall()
 		return query
 
-
 	def getSongName(self,no):
 		query=self.conn.execute(f"select SongName ,Artist,Album from 'MusicLIB' where No ='{no}'").fetchall()
 		return query
-
 
 	def playFile(self,path):
 		sp.init()
 		sp.music.load(path)
 		sp.music.play(loops=0)
 
+	def playFileAt(self,path,a):
+		sp.init()
+		sp.music.load(path)
+		sp.music.play(loops=0,start=a)
+
 	def getLength(self):
 		query=self.conn.execute('''SELECT COUNT(*) FROM (SELECT "_rowid_",* FROM "main"."MusicLIB");''').fetchall()
 		return query
-		
 
 	def stopFile(self):
 		sp.music.stop()
@@ -93,10 +94,30 @@ class MusicDataBase():
 	def delete_table(self):
 		self.conn.execute('''DROP TABLE "main"."MusicLIB";''')
 
-
-
 	def pause(self):
-		sp.music.pause()
+		try:
+			sp.music.pause()
+		except:
+			pass
 
 	def unPause(self):
-		sp.music.unpause()
+		try:
+			sp.music.unpause()
+		except:
+			pass
+
+	def vol_Val(self,x):
+		try:
+			sp.music.set_volume(x)
+		except :
+			pass
+
+	def get_curret_time(self):
+		return sp.music.get_pos()
+
+	def stop(self):
+		try:
+			sp.music.stop()
+		except:
+			pass
+		
