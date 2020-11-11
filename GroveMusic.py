@@ -63,10 +63,10 @@ class GroveMusic():
 
 	# ------------------------ create functionnig window --------------------------------
 	def mainWindow(self):
-		barWin = Frame(self.window,bg="#000",height=10,width=800,)
-		b=Button(barWin,text="X",bg="#000",fg="#000",bd=0,activebackground="#f00",activeforeground="#fff",command=self.quitWin).place(relheight=1,relx=0.94,relwidth=0.06)
-		barWin.pack()
-		self.windowSub = Frame(self.window,height=640,width=800)
+		# barWin = Frame(self.window,bg="#fff",height=10,width=800,)
+		# b=Button(barWin,text="X",bg="#000",fg="#000",bd=0,activebackground="#f00",activeforeground="#fff",command=self.quitWin).place(relheight=1,relx=0.94,relwidth=0.06)
+		# barWin.pack()
+		self.windowSub = Frame(self.window,height=650,width=800)
 		self.windowSub.pack()
 		self.height = 0.83
 		self.width = 0.06
@@ -75,7 +75,6 @@ class GroveMusic():
 		self.bar.place(relheight=0.83,relwidth=self.width)
 
 		self.listFrame = Frame(self.windowSub,bg="black")
-		# b=button(self.listFrame,text="X").pack(side=RIGHT)
 		self.MusicList = Frame(self.listFrame,bg="black")
 		self.MusicLiveWindow(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
@@ -292,7 +291,6 @@ class GroveMusic():
 		s.place(relwidth=0.8,relx=0.1,relheight=1)
 		self.song_length_lable = Label(slider_frame,font="arial 13",text=self.get_song_length,bg="#000",fg="#fff",anchor=W)
 		self.song_length_lable.place(relwidth=0.1,relheight=1,relx=0.9)
-
 		slider_frame.place(relheight=0.05,relwidth=1,rely=0.25)
 
 		player_frame = Frame(self.fullListWindow,bg="green")
@@ -309,11 +307,30 @@ class GroveMusic():
 		c=Frame(v,bg="#000")
 		c.place(relwidth=1,relheight=0.45)
 		v.place(relheight=1,relwidth=0.3,relx=0.42)
+		b=Frame(player_frame,bg="#000").place(relheight=1,relwidth=0.18,relx=0.72)
+		scaleWindow = Button(player_frame,image=self.scaleIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",anchor=W).place(relheight=1,relwidth=0.1,relx=0.9)
 
 		player_frame.place(relheight=0.1,relwidth=1,rely=0.3)
 
 		song_list_frame = Frame(self.fullListWindow,bg="blue")
+		my_canvas =  Canvas(song_list_frame,bg="#000")
+		my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
+		my_Scroll = ttk.Scrollbar(song_list_frame,orient=VERTICAL,command = my_canvas.yview,)
+		my_Scroll.pack(side= RIGHT,fill=Y)
+		my_canvas.configure(yscrollcommand=my_Scroll.set)
+		my_canvas.bind('<Configure>', lambda e : my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+		self.secondFrame = Frame(my_canvas)
+		my_canvas.create_window((0,0),window = self.secondFrame ,anchor="nw")
+		images = PhotoImage(file = 'asset/searchP.png')
+		for j in self.mf.getLength():
+			for i in range(j[0]):
+				c=self.mf.getSongName(i+1)
+				play = Button(self.secondFrame,text="▶",bg="#000",fg="#aaa",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
+				songName = Button(self.secondFrame,text=c[0][0],height=2,width=45,anchor="w",bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
+				artist = Button(self.secondFrame,text=c[0][1],height=2,width=18,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
+				albums = Button(self.secondFrame,text=c[0][2],height=2,width=18,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
 		song_list_frame.place(relwidth=1,relheight=0.6,rely=0.4)
+
 		self.fullListWindow.place(relheight=1,relwidth=1)
 		self.cancelBtn = Button(self.window,image=self.arrowIcon,width=47,bg = "#000",activebackground="#626262",height=30,activeforeground="#fff",borderwidth=0,command=self.cancelBtnFunc)
 		self.cancelBtn.place(relx=0)
@@ -484,7 +501,7 @@ class GroveMusic():
 			self.vol_clicked = True 
 			self.vol_controll(self.current_volume)
 
-	# ------------------------------- time function ---------------------------------
+	# ------------------------------------- time function -------------------------------------
 	def get_time(self):
 		current_time = self.mf.get_curret_time()/1000
 		self.converted_current_time = time.strftime('%M:%S',time.gmtime(current_time))
