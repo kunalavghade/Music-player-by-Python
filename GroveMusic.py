@@ -17,6 +17,7 @@ class GroveMusic():
 		self.window = Tk()
 		self.cliked = True
 		self.songNameToEdit=""
+		self.Midlebutton_image = False
 		self.middleBtnClick = True
 		self.songNo = 0
 		self.vol_clicked=True
@@ -174,7 +175,10 @@ class GroveMusic():
 		self.songName  = Button(self.playerFrame,text=self.songNameToEdit,activebackground=BOTTOMBARBRIGHT,activeforeground="#eee",borderwidth=0,bg=BOTTOMBAR,fg="#ccc",anchor='w',font="12",command=self.NowPlayingFunc)
 		self.songName.place(relwidth=0.2,relheight=1,relx=0.12)
 		backBtn = Button(self.playerFrame,image=self.backBtnIcon,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,command=self.playBack,anchor="e").place(relheight=0.6,relwidth=0.1,relx=0.32)
-		self.middleBtn = Button(self.playerFrame,image=self.play,activebackground=BOTTOMBAR,bg=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,command=self.middleBtnFunc)
+		if self.Midlebutton_image==True:
+			self.middleBtn = Button(self.playerFrame,image=self.pause,activebackground=BOTTOMBAR,bg=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,command=self.middleBtnFunc)
+		else:
+			self.middleBtn = Button(self.playerFrame,image=self.play,activebackground=BOTTOMBAR,bg=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,command=self.middleBtnFunc)
 		self.middleBtn.place(relheight=0.6,relwidth=0.12,relx=0.42)
 		nextBtn = Button(self.playerFrame,image=self.nextBtnIcon,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,command=self.playNext,anchor="w").place(relheight=0.6,relwidth=0.1,relx=0.54)
 		sliderFrame = Frame(self.playerFrame,bg=BOTTOMBAR)
@@ -197,6 +201,8 @@ class GroveMusic():
 		volScliderFrame.place(relheight=0.6,relwidth=0.17,relx=0.74)
 		scaleWindow = Button(self.playerFrame,image=self.scaleIcon,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,).place(relheight=0.6,relwidth=0.09,relx=0.91)
 		bottomCorner = Frame(self.playerFrame,bg=BOTTOMBAR).place(rely=0.6,relheight=0.4,relwidth=0.36,relx=0.64)
+
+
 
 	# ---------------------------- Rightbar Bar Scalling -------------------------------
 	def resizeViwe(self):
@@ -263,10 +269,12 @@ class GroveMusic():
 		if self.middleBtnClick == True :
 			self.middleBtn.configure(image=self.pause)
 			self.middleBtnClick = False
+			self.Midlebutton_image = True
 			self.mf.unPause()
 		else:
 			self.middleBtn.configure(image=self.play)
 			self.middleBtnClick = True
+			self.Midlebutton_image = True
 			self.mf.pause()
 
 	# ----------------------------- Now playing window --------------------------------
@@ -295,7 +303,11 @@ class GroveMusic():
 
 		player_frame = Frame(self.fullListWindow,bg="green")
 		backBtn = Button(player_frame,image=self.backBtnIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",command=self.playBack,anchor="e").place(relheight=1,relwidth=0.1)
-		self.middleBtn = Button(player_frame,image=self.play,activebackground="#000",bg="#000",activeforeground="#000",borderwidth=0,command=self.middleBtnFunc)
+		if self.Midlebutton_image==True:
+			self.middleBtn = Button(player_frame,image=self.pause,activebackground="#000",bg="#000",activeforeground="#000",borderwidth=0,command=self.middleBtnFunc)
+		else:
+			self.middleBtn = Button(player_frame,image=self.play,activebackground="#000",bg="#000",activeforeground="#000",borderwidth=0,command=self.middleBtnFunc)
+
 		self.middleBtn.place(relheight=1,relwidth=0.12,relx=0.1)
 		nextBtn = Button(player_frame,image=self.nextBtnIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",command=self.playNext,anchor="w").place(relheight=1,relwidth=0.1,relx=0.22)
 		self.volBtn = Button(player_frame,image=self.fullVol,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",anchor="e",command=self.vol_mute)
@@ -309,7 +321,6 @@ class GroveMusic():
 		v.place(relheight=1,relwidth=0.3,relx=0.42)
 		b=Frame(player_frame,bg="#000").place(relheight=1,relwidth=0.18,relx=0.72)
 		scaleWindow = Button(player_frame,image=self.scaleIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",anchor=W).place(relheight=1,relwidth=0.1,relx=0.9)
-
 		player_frame.place(relheight=0.1,relwidth=1,rely=0.3)
 
 		song_list_frame = Frame(self.fullListWindow,bg="blue")
