@@ -4,7 +4,7 @@ import recent as r
 from tkinter import ttk
 import musicFind as mm
 import searchWin as s
-import nowPlaying as np
+# import nowPlaying as np
 import time
 from mutagen.mp3 import MP3
 
@@ -53,7 +53,7 @@ class GroveMusic():
 	# ------------------------- delete loading frame ----------------------------------
 	def deleteFrame(self):
 		# # self.window.geometry("800x620+270+60")
-		# self.window.wm_overrideredirect(False)
+		self.window.wm_overrideredirect(False)
 		self.blueFrame.destroy()
 		self.mainWindow()
 
@@ -63,10 +63,10 @@ class GroveMusic():
 
 	# ------------------------ create functionnig window --------------------------------
 	def mainWindow(self):
-		barWin = Frame(self.window,bg="#000",height=30,width=800,)
+		barWin = Frame(self.window,bg="#000",height=10,width=800,)
 		b=Button(barWin,text="X",bg="#000",fg="#000",bd=0,activebackground="#f00",activeforeground="#fff",command=self.quitWin).place(relheight=1,relx=0.94,relwidth=0.06)
 		barWin.pack()
-		self.windowSub = Frame(self.window,height=620,width=800)
+		self.windowSub = Frame(self.window,height=640,width=800)
 		self.windowSub.pack()
 		self.height = 0.83
 		self.width = 0.06
@@ -170,9 +170,9 @@ class GroveMusic():
 	
 	# ----------------------------- Bottom Player Bar -----------------------------------
 	def bottomBar(self):
-		self.songImage = Button(self.playerFrame,image=self.albumIcon,bg="#333",activebackground="#444",bd=0)
+		self.songImage = Button(self.playerFrame,image=self.albumIcon,bg="#333",activebackground="#444",bd=0,command=self.NowPlayingFunc)
 		self.songImage.place(relheight=1,relwidth=0.12)
-		self.songName  = Button(self.playerFrame,text=self.songNameToEdit,activebackground=BOTTOMBARBRIGHT,activeforeground="#eee",borderwidth=0,bg=BOTTOMBAR,fg="#ccc",anchor='w',font="12")
+		self.songName  = Button(self.playerFrame,text=self.songNameToEdit,activebackground=BOTTOMBARBRIGHT,activeforeground="#eee",borderwidth=0,bg=BOTTOMBAR,fg="#ccc",anchor='w',font="12",command=self.NowPlayingFunc)
 		self.songName.place(relwidth=0.2,relheight=1,relx=0.12)
 		backBtn = Button(self.playerFrame,image=self.backBtnIcon,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,command=self.playBack,anchor="e").place(relheight=0.6,relwidth=0.1,relx=0.32)
 		self.middleBtn = Button(self.playerFrame,image=self.play,activebackground=BOTTOMBAR,bg=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,command=self.middleBtnFunc)
@@ -209,7 +209,6 @@ class GroveMusic():
 				self.cliked = False
 			self.fullViwe()
 			self.searchBtn.configure(command= self.searchFunc)
-			print(self.width)
 		else :
 			for i in range(0,341):
 				self.width = (400-i)/1000
@@ -218,7 +217,6 @@ class GroveMusic():
 				self.cliked = True
 			self.searchBtn.configure(command= self.resizeViwe)
 			self.smallViwe()
-			print(self.width)
 
 	# ------------------------- Right Bar miximized (function) --------------------------
 	def fullViwe(self):
@@ -276,10 +274,49 @@ class GroveMusic():
 	def NowPlayingFunc(self):
 		self.windowSub.destroy()
 		self.fullListWindow = Frame(self.window,bg="red")
+		song_info_frame = Frame(self.fullListWindow,bg="#000")
+		self.songImage = Button(song_info_frame,image=self.albumIcon,bg="#333",activebackground="#444",bd=0)
+		self.songImage.place(relheight=0.7,relwidth=0.15,rely=0.13,relx=0.08)
+		self.songName  = Button(song_info_frame,text=self.songNameToEdit,activebackground="#000",activeforeground="#fff",borderwidth=0,bg="#000",fg="#fff",anchor='w',font="arial 15 bold")
+		self.songName.place(relwidth=0.7,relheight=0.6,relx=0.25,rely=0.13)
+		song_info_frame.place(relheight=0.25,relwidth=1)
+		
+		slider_frame = Frame(self.fullListWindow,bg="#000")
+		self.temp_lable = Label(slider_frame,font="arial 13",text=self.converted_current_time,bg="#000",fg="#fff",anchor=E)
+		self.temp_lable.place(relwidth=0.1,relheight=1)
+		s = Frame(slider_frame,bg="#000")
+		self.songSlider = Scale(s, from_=0, to=100, orient=HORIZONTAL,bg="#0090aa",borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg="#000",width=8,length=600,highlightcolor="#0090ff",command=self.go_to_pos)
+		self.songSlider.pack()
+		cover = Frame(s,bg="#000")
+		cover.place(relwidth=1,relheight=0.7)
+		s.place(relwidth=0.8,relx=0.1,relheight=1)
+		self.song_length_lable = Label(slider_frame,font="arial 13",text=self.get_song_length,bg="#000",fg="#fff",anchor=W)
+		self.song_length_lable.place(relwidth=0.1,relheight=1,relx=0.9)
+
+		slider_frame.place(relheight=0.05,relwidth=1,rely=0.25)
+
+		player_frame = Frame(self.fullListWindow,bg="green")
+		backBtn = Button(player_frame,image=self.backBtnIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",command=self.playBack,anchor="e").place(relheight=1,relwidth=0.1)
+		self.middleBtn = Button(player_frame,image=self.play,activebackground="#000",bg="#000",activeforeground="#000",borderwidth=0,command=self.middleBtnFunc)
+		self.middleBtn.place(relheight=1,relwidth=0.12,relx=0.1)
+		nextBtn = Button(player_frame,image=self.nextBtnIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",command=self.playNext,anchor="w").place(relheight=1,relwidth=0.1,relx=0.22)
+		self.volBtn = Button(player_frame,image=self.fullVol,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",anchor="e",command=self.vol_mute)
+		self.volBtn.place(relheight=1,relwidth=0.1,relx=0.32)
+		v = Frame(player_frame,bg="#000")
+		self.volScal = Scale(v, from_=0, to=100,command = self.vol_controll, orient=HORIZONTAL,bg="#0090aa",borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=200,highlightcolor="#0090ff")
+		self.volScal.set(100)
+		self.volScal.pack(pady=8)
+		c=Frame(v,bg="#000")
+		c.place(relwidth=1,relheight=0.45)
+		v.place(relheight=1,relwidth=0.3,relx=0.42)
+
+		player_frame.place(relheight=0.1,relwidth=1,rely=0.3)
+
+		song_list_frame = Frame(self.fullListWindow,bg="blue")
+		song_list_frame.place(relwidth=1,relheight=0.6,rely=0.4)
 		self.fullListWindow.place(relheight=1,relwidth=1)
-		self.cancelBtn = Button(self.window,text="click Me !",command=self.cancelBtnFunc)
+		self.cancelBtn = Button(self.window,image=self.arrowIcon,width=47,bg = "#000",activebackground="#626262",height=30,activeforeground="#fff",borderwidth=0,command=self.cancelBtnFunc)
 		self.cancelBtn.place(relx=0)
-		np.NowPlaying(self.fullListWindow)
 	
 	# ---------------------------- Back To Main Window ----------------------------
 	def cancelBtnFunc(self):
@@ -351,12 +388,12 @@ class GroveMusic():
 		self.songNo+=1
 		self.playMusic(self.songNo)
 
-	# ------------------------------- play previous Function ------------------
+	# ------------------------------- play previous Function ---------------------------------
 	def playBack(self):
 		self.songNo-=1
 		self.playMusic(self.songNo)
 
-	# -------------------------------- Setting button function ---------------------- 
+	# -------------------------------- Setting button function -------------------------------------
 	def settingsBtnFunc(self):
 		self.MusicList.destroy()
 		self.MusicList = Frame(self.listFrame,bg="black")
@@ -397,7 +434,6 @@ class GroveMusic():
 		for j in self.mf.getLength():
 			for i in range(j[0]):
 				c=self.mf.getSongName(i+1)
-				print(c)
 				if i%2 != 0:
 					play = Button(self.secondFrame,text="▶",bg="#000",fg="#aaa",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
 					songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
@@ -426,7 +462,6 @@ class GroveMusic():
 	def vol_controll(self,x):
 		self.current_volume = x
 		x = int(x)
-		print (x)
 		if x >= 70 and x <= 100:
 			self.volBtn.configure(image=self.fullVol)
 		elif x >= 40 and x < 70:
@@ -451,7 +486,6 @@ class GroveMusic():
 
 	# ------------------------------- time function ---------------------------------
 	def get_time(self):
-		b=self.songSlider.get()+1
 		current_time = self.mf.get_curret_time()/1000
 		self.converted_current_time = time.strftime('%M:%S',time.gmtime(current_time))
 		song = MP3(self.path)
@@ -470,7 +504,8 @@ class GroveMusic():
 
 	def go_to_pos(self,x):
 		pass
-		
+
+
 if __name__ == "__main__":
 	GroveMusic()
 	

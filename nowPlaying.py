@@ -12,4 +12,4 @@ class NowPlaying():
 		secondFrame = Frame(my_canvas)
 		my_canvas.create_window((0,0),window = secondFrame ,anchor="nw")
 		for i in range(100):
-			f= Button(secondFrame,text=f"button{i}").grid(row=i,column=0)
+		if b ==int(current_time):
