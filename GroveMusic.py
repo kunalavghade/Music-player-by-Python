@@ -4,7 +4,6 @@ import recent as r
 from tkinter import ttk
 import musicFind as mm
 import searchWin as s
-# import nowPlaying as np
 import time
 from mutagen.mp3 import MP3
 
@@ -21,6 +20,7 @@ class GroveMusic():
 		self.middleBtnClick = True
 		self.songNo = 0
 		self.vol_clicked=True
+		self.current_volume = 100
 		self.get_song_length=""
 		self.converted_current_time=""
 		self.pause = PhotoImage(file = "asset/pause.png")
@@ -195,13 +195,12 @@ class GroveMusic():
 		self.volBtn.place(relheight=0.6,relwidth=0.1,relx=0.64)
 		volScliderFrame = Frame(self.playerFrame,bg=BOTTOMBAR)
 		self.volScal = Scale(volScliderFrame, from_=0, to=100,command = self.vol_controll, orient=HORIZONTAL,bg="#0090aa",borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=125,highlightcolor="#0090ff")
-		self.volScal.set(100)
+		self.volScal.set(self.current_volume)
 		self.volScal.pack(pady=7)
 		self.coverframe = Frame(volScliderFrame,bg=BOTTOMBAR).place(relwidth=1,relheight=0.45)
 		volScliderFrame.place(relheight=0.6,relwidth=0.17,relx=0.74)
 		scaleWindow = Button(self.playerFrame,image=self.scaleIcon,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,).place(relheight=0.6,relwidth=0.09,relx=0.91)
 		bottomCorner = Frame(self.playerFrame,bg=BOTTOMBAR).place(rely=0.6,relheight=0.4,relwidth=0.36,relx=0.64)
-
 
 
 	# ---------------------------- Rightbar Bar Scalling -------------------------------
@@ -314,7 +313,7 @@ class GroveMusic():
 		self.volBtn.place(relheight=1,relwidth=0.1,relx=0.32)
 		v = Frame(player_frame,bg="#000")
 		self.volScal = Scale(v, from_=0, to=100,command = self.vol_controll, orient=HORIZONTAL,bg="#0090aa",borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=200,highlightcolor="#0090ff")
-		self.volScal.set(100)
+		self.volScal.set(self.current_volume)
 		self.volScal.pack(pady=8)
 		c=Frame(v,bg="#000")
 		c.place(relwidth=1,relheight=0.45)
