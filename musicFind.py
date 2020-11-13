@@ -2,6 +2,7 @@ import os
 import sqlite3
 import eyed3
 import pygame.mixer as sp
+from tkinter import messagebox
 
 class MusicDataBase():
 	def __init__(self):
@@ -52,20 +53,24 @@ class MusicDataBase():
 
 				try:
 					if track_info.tag.album == None:
-						song_info.append('unknown artist')
+						song_info.append('unknown album')
 					else:
 						song_info.append(track_info.tag.album)	
 				except:
-					song_info.append('unknown artist')
+					song_info.append('unknown album')
 				song_info.append(self.dir)
 				song_info.append(os.path.splitext(track)[1])
-				print(song_info)
-				self.upDateDataBase(song_info)			
+				# print(song_info)
+				try:
+					self.upDateDataBase(song_info)	
+				except:
+					pass
+		messagebox.showinfo("Success","Songs added successfully !                     ")		
 
 	def selectSection(self,rowid,search):
 		query=self.cor.execute(f'''SELECT "_rowid_",* FROM "main"."MusicLIB" WHERE "{rowid}" LIKE"%{search}%"''').fetchall()
-		print(query)
-
+		return query
+		
 	def getPath(self,no):
 		query=self.cor.execute(f"select  Path , SongName , ext from 'MusicLIB' where No ='{no}'").fetchall()
 		return query
@@ -92,7 +97,16 @@ class MusicDataBase():
 		sp.music.stop()
 
 	def delete_table(self):
-		self.conn.execute('''DROP TABLE "main"."MusicLIB";''')
+		query=messagebox.askokcancel("Reset", "Reset directory to default empty !")
+		if query:
+			try:
+				self.conn.execute('''DROP TABLE "main"."MusicLIB";''')
+				messagebox.showinfo("Success","Songs Reset successfully !                     ")		
+
+			except:
+				pass
+		else:
+			pass
 
 	def pause(self):
 		try:

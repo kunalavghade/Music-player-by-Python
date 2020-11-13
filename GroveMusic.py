@@ -3,7 +3,7 @@ from tkinter import filedialog
 import recent as r
 from tkinter import ttk
 import musicFind as mm
-import searchWin as s
+# import searchWin as s
 import time
 from mutagen.mp3 import MP3
 
@@ -34,6 +34,14 @@ class GroveMusic():
 		self.fifty = PhotoImage(file = "asset/60.png")
 		self.Twenty_five = PhotoImage(file = "asset/40.png")
 		self.no_vol = PhotoImage(file = "asset/no.png")
+		self.line = PhotoImage(file="asset/lines.png")
+		self.searchIcon = PhotoImage(file = "asset/search.png")
+		self.musicIcon = PhotoImage(file="asset/music.png")
+		self.playingIcon = PhotoImage(file="asset/NowPlaying.png")
+		self.recentIcon = PhotoImage(file="asset/resent.png")
+		self.arrowIcon = PhotoImage(file="asset/Arrow.png")		
+		self.settingIcon = PhotoImage(file="asset/setting.png")
+		
 		self.window.title("Grove Music")
 		self.window.geometry("800x650+270+60")
 		self.window.wm_overrideredirect(True)
@@ -58,6 +66,7 @@ class GroveMusic():
 		self.blueFrame.destroy()
 		self.mainWindow()
 
+	# -------------------------------- quit window -----------------------------------
 	def quitWin(self):
 		self.window.quit()
 		self.mf.stop()
@@ -89,14 +98,12 @@ class GroveMusic():
 	# ------------------------- Right bar creation -------------------------------------
 	def barFunc(self):
 		# full viwe button
-		self.line = PhotoImage(file="asset/lines.png")
 		self.fullViweBtn = Button(self.bar, bg = "#313131",activebackground="#626262",text = "=",activeforeground="#fff",borderwidth=0, command = self.resizeViwe,image = self.line)
 		self.fullViweBtn.place(rely = 0.1, relwidth = 1,relheight=0.09)
 		# -------------------------------------------------- Arrow Icon --------------------------------------------------------------
-		self.arrowIcon = PhotoImage(file="asset/Arrow.png")
 		self.arrowFrame = Frame(self.bar,bg="#313131")
 		# Search button
-		self.arrow = Button(self.arrowFrame,image=self.arrowIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0)
+		self.arrow = Button(self.arrowFrame,image=self.arrowIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.quitWin)
 		self.arrow.grid(row = 0 ,column =0)
 		# serch input
 		self.Grove = Label(self.arrowFrame,bg="#313131",font="arial 12 ",bd=0,text="Groove music                                            ",fg="#fff",pady=7)
@@ -104,7 +111,6 @@ class GroveMusic():
 		self.arrowFrame.place(rely=0.01,relwidth=1,relheight=0.09)
 		# --------------------------------------------------------------------------------------------------------------------------------
 		#------------------------------------------- Search Frame----------------------------------------------------------------
-		self.searchIcon = PhotoImage(file = "asset/search.png")
 		self.searchIconDark = PhotoImage(file = "asset/searchP.png")
 		self.searchFrame = Frame(self.bar,bg="#212121")
 		# Search button
@@ -116,7 +122,6 @@ class GroveMusic():
 		self.searchFrame.place(rely=0.2,relwidth=1,relheight=0.08)
 		# -------------------------------------------------------------------------------------------------------------------------
 		# -------------------------------------------------- music Icon --------------------------------------------------------------
-		self.musicIcon = PhotoImage(file="asset/music.png")
 		self.musicFrame = Frame(self.bar,bg="#313131")
 		# Search button
 		self.musicBtn = Button(self.musicFrame,image=self.musicIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.musicFunc)
@@ -127,7 +132,6 @@ class GroveMusic():
 		self.musicFrame.place(rely=0.3,relwidth=1,relheight=0.09)
 		# -----------------------------------------------------------------------------------------------------------------------------
 		# -------------------------------------------------- recent Icon --------------------------------------------------------------
-		self.recentIcon = PhotoImage(file="asset/resent.png")
 		self.recentFrame = Frame(self.bar,bg="#313131")
 		# Search button
 		self.recentBtn = Button(self.recentFrame,image=self.recentIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.recent)
@@ -142,7 +146,6 @@ class GroveMusic():
 		self.partitionFrame1.place()
 		# -------------------------------------------------------------------------------------------------
 		# ------------------------------------------- Now Playing -------------------------------------------
-		self.playingIcon = PhotoImage(file="asset/NowPlaying.png")
 		self.playingFrame = Frame(self.bar,bg="#313131")
 		# Search button
 		self.playingBtn = Button(self.playingFrame,image=self.playingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.NowPlayingFunc)
@@ -157,7 +160,6 @@ class GroveMusic():
 		self.partitionFrame.place()
 		# -------------------------------------------------------------------------------------------------
 		# -------------------------------------------------- Setting Icon --------------------------------------------------------------
-		self.settingIcon = PhotoImage(file="asset/setting.png")
 		self.settingFrame = Frame(self.bar,bg="#313131")
 		# setting button
 		self.settingBtn = Button(self.settingFrame,image=self.settingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.settingsBtnFunc)
@@ -202,7 +204,6 @@ class GroveMusic():
 		scaleWindow = Button(self.playerFrame,image=self.scaleIcon,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,).place(relheight=0.6,relwidth=0.09,relx=0.91)
 		bottomCorner = Frame(self.playerFrame,bg=BOTTOMBAR).place(rely=0.6,relheight=0.4,relwidth=0.36,relx=0.64)
 
-
 	# ---------------------------- Rightbar Bar Scalling -------------------------------
 	def resizeViwe(self):
 		if self.cliked:
@@ -246,7 +247,63 @@ class GroveMusic():
 	def searchFunc(self):
 		self.MusicList.destroy()
 		self.MusicList = Frame(self.listFrame,bg="black")
-		s.SearchWin(self.MusicList)
+		search=self.entry.get()
+		search_label = Label(self.MusicList,text=f'Results for search "{search}"',font="arial 25",anchor=W,bg="#000",fg="#fff").place(relheight=0.2,relwidth=0.85,relx=0.05,rely=0.05)
+		qury=self.mf.selectSection("songName",search)
+		if len(qury)<9:
+			try:
+				song_list.destroy()
+			except:
+				pass
+			self.secondFrame=Frame(self.MusicList,bg="#000")
+			i=0
+			for c in qury:
+				# print(c[0])
+				if i%2 != 0:
+					play = Button(self.secondFrame,text="▶",bg="#000",fg="#aaa",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				else:   
+					play = Button(self.secondFrame,text="▶",bg="#444",fg="#ccc",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				i+=1
+			self.secondFrame.place(relheight=0.68,relwidth=0.94,relx=0.03,rely=0.28)
+		else:
+			try:
+				self.secondFrame.destroy()
+			except:
+				pass
+			song_list = Frame(self.MusicList)
+			my_canvas =  Canvas(song_list,bg="#000")
+			my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
+			my_Scroll = ttk.Scrollbar(song_list,orient=VERTICAL,command = my_canvas.yview,)
+			my_Scroll.pack(side= RIGHT,fill=Y)
+			my_canvas.configure(yscrollcommand=my_Scroll.set)
+			my_canvas.bind('<Configure>', lambda e : my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+			self.secondFrame = Frame(my_canvas)
+			my_canvas.create_window((0,0),window = self.secondFrame ,anchor="nw")
+			i=0
+			for c in qury:
+				# print(c)
+				if i%2 != 0:
+					play = Button(self.secondFrame,text="▶",bg="#000",fg="#aaa",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+					# print("e")
+				else:   
+					play = Button(self.secondFrame,text="▶",bg="#444",fg="#ccc",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+					# print("e")
+					
+				i+=1
+			song_list.place(relheight=0.68,relwidth=0.94,relx=0.03,rely=0.28)
+
 		self.MusicList.place(relheight=1,relwidth=1)
 
 	# --------------------------- music List window creation ---------------------------
@@ -279,7 +336,7 @@ class GroveMusic():
 	# ----------------------------- Now playing window --------------------------------
 	def NowPlayingFunc(self):
 		self.windowSub.destroy()
-		self.fullListWindow = Frame(self.window,bg="red")
+		self.fullListWindow = Frame(self.window,bg="#000")
 		song_info_frame = Frame(self.fullListWindow,bg="#000")
 		self.songImage = Button(song_info_frame,image=self.albumIcon,bg="#333",activebackground="#444",bd=0)
 		self.songImage.place(relheight=0.7,relwidth=0.15,rely=0.13,relx=0.08)
@@ -300,7 +357,7 @@ class GroveMusic():
 		self.song_length_lable.place(relwidth=0.1,relheight=1,relx=0.9)
 		slider_frame.place(relheight=0.05,relwidth=1,rely=0.25)
 
-		player_frame = Frame(self.fullListWindow,bg="green")
+		player_frame = Frame(self.fullListWindow,bg="#000")
 		backBtn = Button(player_frame,image=self.backBtnIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",command=self.playBack,anchor="e").place(relheight=1,relwidth=0.1)
 		if self.Midlebutton_image==True:
 			self.middleBtn = Button(player_frame,image=self.pause,activebackground="#000",bg="#000",activeforeground="#000",borderwidth=0,command=self.middleBtnFunc)
