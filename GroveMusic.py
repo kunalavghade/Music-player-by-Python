@@ -1,9 +1,8 @@
-from tkinter import *
+from tkinter import Button,Frame,Tk,Label,PhotoImage,Entry,Canvas,BOTH,LEFT,VERTICAL,RIGHT,Y,Scale,HORIZONTAL,FLAT,E,W
 from tkinter import filedialog
 import recent as r
 from tkinter import ttk
 import musicFind as mm
-# import searchWin as s
 import time
 from mutagen.mp3 import MP3
 
@@ -14,6 +13,7 @@ class GroveMusic():
 	# initialize root window 
 	def __init__(self):
 		self.window = Tk()
+		self.mf = mm.MusicDataBase()
 		self.cliked = True
 		self.songNameToEdit=""
 		self.Midlebutton_image = False
@@ -41,6 +41,7 @@ class GroveMusic():
 		self.recentIcon = PhotoImage(file="asset/resent.png")
 		self.arrowIcon = PhotoImage(file="asset/Arrow.png")		
 		self.settingIcon = PhotoImage(file="asset/setting.png")
+		self.set_colors(self.mf.read_file())
 		
 		self.window.title("Grove Music")
 		self.window.geometry("800x650+270+60")
@@ -53,8 +54,8 @@ class GroveMusic():
 	# --------------------------Looding Icon - Blue Frame---------------------------------
 	def starting(self):
 		self.GroveIcon = PhotoImage(file = "asset/Grove.png")
-		self.blueFrame = Frame(self.window,bg="#0090FF")
-		self.Icon = Label(self.blueFrame,image = self.GroveIcon,bg="#0090FF")
+		self.blueFrame = Frame(self.window,bg=self.BLUE)
+		self.Icon = Label(self.blueFrame,image = self.GroveIcon,bg=self.BLUE)
 		self.Icon.place(relheight=1,relwidth=1)
 		self.blueFrame.place(relheight=1,relwidth=1)
 		self.blueFrame.after(2000,self.deleteFrame)
@@ -73,19 +74,19 @@ class GroveMusic():
 
 	# ------------------------ create functionnig window --------------------------------
 	def mainWindow(self):
-		# barWin = Frame(self.window,bg="#fff",height=10,width=800,)
-		# b=Button(barWin,text="X",bg="#000",fg="#000",bd=0,activebackground="#f00",activeforeground="#fff",command=self.quitWin).place(relheight=1,relx=0.94,relwidth=0.06)
+		# barWin = Frame(self.window,bg=self.white,height=10,width=800,)
+		# b=Button(barWin,text="X",bg=self.black,fg=self.black,bd=0,activebackground="#f00",activeforeground=self.white,command=self.quitWin).place(relheight=1,relx=0.94,relwidth=0.06)
 		# barWin.pack()
-		self.windowSub = Frame(self.window,height=650,width=800)
-		self.windowSub.pack()
+		self.windowSub = Frame(self.window)
+		self.windowSub.place(relheight=1,relwidth=1)
 		self.height = 0.83
 		self.width = 0.06
-		self.bar = Frame(self.windowSub,bg="#313131")
+		self.bar = Frame(self.windowSub,bg=self.dg)
 		self.barFunc()
 		self.bar.place(relheight=0.83,relwidth=self.width)
 
-		self.listFrame = Frame(self.windowSub,bg="black")
-		self.MusicList = Frame(self.listFrame,bg="black")
+		self.listFrame = Frame(self.windowSub,bg=self.black)
+		self.MusicList = Frame(self.listFrame,bg=self.black)
 		self.MusicLiveWindow(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
 		self.listFrame.place(relheight = self.height,relwidth = (1-self.width),relx = self.width)
@@ -98,15 +99,15 @@ class GroveMusic():
 	# ------------------------- Right bar creation -------------------------------------
 	def barFunc(self):
 		# full viwe button
-		self.fullViweBtn = Button(self.bar, bg = "#313131",activebackground="#626262",text = "=",activeforeground="#fff",borderwidth=0, command = self.resizeViwe,image = self.line)
+		self.fullViweBtn = Button(self.bar, bg = self.dg,activebackground=self.lg,text = "=",activeforeground=self.white,borderwidth=0, command = self.resizeViwe,image = self.line)
 		self.fullViweBtn.place(rely = 0.1, relwidth = 1,relheight=0.09)
 		# -------------------------------------------------- Arrow Icon --------------------------------------------------------------
-		self.arrowFrame = Frame(self.bar,bg="#313131")
+		self.arrowFrame = Frame(self.bar,bg=self.dg)
 		# Search button
-		self.arrow = Button(self.arrowFrame,image=self.arrowIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.quitWin)
+		self.arrow = Button(self.arrowFrame,image=self.arrowIcon,width=47,bg = self.dg,activebackground=self.lg,height=44,activeforeground=self.white,borderwidth=0,command=self.quitWin)
 		self.arrow.grid(row = 0 ,column =0)
 		# serch input
-		self.Grove = Label(self.arrowFrame,bg="#313131",font="arial 12 ",bd=0,text="Groove music                                            ",fg="#fff",pady=7)
+		self.Grove = Label(self.arrowFrame,bg=self.dg,font="arial 12 ",bd=0,text="Groove music                                            ",fg=self.white,pady=7)
 		self.Grove.grid(row=0,column=1)
 		self.arrowFrame.place(rely=0.01,relwidth=1,relheight=0.09)
 		# --------------------------------------------------------------------------------------------------------------------------------
@@ -114,67 +115,67 @@ class GroveMusic():
 		self.searchIconDark = PhotoImage(file = "asset/searchP.png")
 		self.searchFrame = Frame(self.bar,bg="#212121")
 		# Search button
-		self.searchBtn = Button(self.searchFrame,image=self.searchIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command = self.resizeViwe)
+		self.searchBtn = Button(self.searchFrame,image=self.searchIcon,width=47,bg = self.dg,activebackground=self.lg,height=44,activeforeground=self.white,borderwidth=0,command = self.resizeViwe)
 		self.searchBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.entry = Entry(self.searchFrame,bg="#212121",width=28,font="arial 12",bd=0,fg="#fff",)
+		self.entry = Entry(self.searchFrame,bg="#212121",width=28,font="arial 12",bd=0,fg=self.white,)
 		self.entry.grid(row=0,column=1)
 		self.searchFrame.place(rely=0.2,relwidth=1,relheight=0.08)
 		# -------------------------------------------------------------------------------------------------------------------------
 		# -------------------------------------------------- music Icon --------------------------------------------------------------
-		self.musicFrame = Frame(self.bar,bg="#313131")
+		self.musicFrame = Frame(self.bar,bg=self.dg)
 		# Search button
-		self.musicBtn = Button(self.musicFrame,image=self.musicIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.musicFunc)
+		self.musicBtn = Button(self.musicFrame,image=self.musicIcon,width=47,bg = self.dg,activebackground=self.lg,height=44,activeforeground=self.white,borderwidth=0,command=self.musicFunc)
 		self.musicBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.muMusic = Button(self.musicFrame,bg="#313131",font="arial 12 ",bd=0,text="My music                                              ",fg="#fff",activebackground="#626262",activeforeground="#fff",command=self.musicFunc)
+		self.muMusic = Button(self.musicFrame,bg=self.dg,font="arial 12 ",bd=0,text="My music                                              ",fg=self.white,activebackground=self.lg,activeforeground=self.white,command=self.musicFunc)
 		self.muMusic.grid(row=0,column=1)
 		self.musicFrame.place(rely=0.3,relwidth=1,relheight=0.09)
 		# -----------------------------------------------------------------------------------------------------------------------------
 		# -------------------------------------------------- recent Icon --------------------------------------------------------------
-		self.recentFrame = Frame(self.bar,bg="#313131")
+		self.recentFrame = Frame(self.bar,bg=self.dg)
 		# Search button
-		self.recentBtn = Button(self.recentFrame,image=self.recentIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.recent)
+		self.recentBtn = Button(self.recentFrame,image=self.recentIcon,width=47,bg = self.dg,activebackground=self.lg,height=44,activeforeground=self.white,borderwidth=0,command=self.recent)
 		self.recentBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.recent = Button(self.recentFrame,bg="#313131",font="arial 12 ",bd=0,text="Recent playes                                      ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,command=self.recent)
+		self.recent = Button(self.recentFrame,bg=self.dg,font="arial 12 ",bd=0,text="Recent playes                                      ",fg=self.white,activebackground=self.lg,activeforeground=self.white,pady=7,command=self.recent)
 		self.recent.grid(row=0,column=1)
 		self.recentFrame.place(rely=0.4,relwidth=1,relheight=0.09)
 		# -----------------------------------------------------------------------------------------------------------------------------
 		# -----------------------------------------------------partition------------------------------------
-		self.partitionFrame1 = Frame(self.bar,bg="#fff")
+		self.partitionFrame1 = Frame(self.bar,bg=self.white)
 		self.partitionFrame1.place()
 		# -------------------------------------------------------------------------------------------------
 		# ------------------------------------------- Now Playing -------------------------------------------
-		self.playingFrame = Frame(self.bar,bg="#313131")
+		self.playingFrame = Frame(self.bar,bg=self.dg)
 		# Search button
-		self.playingBtn = Button(self.playingFrame,image=self.playingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.NowPlayingFunc)
+		self.playingBtn = Button(self.playingFrame,image=self.playingIcon,width=47,bg = self.dg,activebackground=self.lg,height=44,activeforeground=self.white,borderwidth=0,command=self.NowPlayingFunc)
 		self.playingBtn.grid(row = 0 ,column =0)
 		# serch input
-		self.playing = Button(self.playingFrame,bg="#313131",font="arial 12 ",bd=0,text="Now playing                                       ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,command=self.NowPlayingFunc)
+		self.playing = Button(self.playingFrame,bg=self.dg,font="arial 12 ",bd=0,text="Now playing                                       ",fg=self.white,activebackground=self.lg,activeforeground=self.white,pady=7,command=self.NowPlayingFunc)
 		self.playing.grid(row=0,column=1)
 		self.playingFrame.place(rely=0.51,relwidth=1,relheight=0.09)
 		# -----------------------------------------------------------------------------------------------------
 		# -----------------------------------------------------partition------------------------------------
-		self.partitionFrame = Frame(self.bar,bg="#fff")
+		self.partitionFrame = Frame(self.bar,bg=self.white)
 		self.partitionFrame.place()
 		# -------------------------------------------------------------------------------------------------
 		# -------------------------------------------------- Setting Icon --------------------------------------------------------------
-		self.settingFrame = Frame(self.bar,bg="#313131")
+		self.settingFrame = Frame(self.bar,bg=self.dg)
 		# setting button
-		self.settingBtn = Button(self.settingFrame,image=self.settingIcon,width=47,bg = "#313131",activebackground="#626262",height=44,activeforeground="#fff",borderwidth=0,command=self.settingsBtnFunc)
+		self.settingBtn = Button(self.settingFrame,image=self.settingIcon,width=47,bg = self.dg,activebackground=self.lg,height=44,activeforeground=self.white,borderwidth=0,command=self.settingsBtnFunc)
 		self.settingBtn.grid(row = 0 ,column =0)
 		# seting input
-		self.settings = Button(self.settingFrame,bg="#313131",font="arial 12 ",bd=0,text="Settings                                              ",fg="#fff",activebackground="#626262",activeforeground="#fff",pady=7,command=self.settingsBtnFunc)
+		self.settings = Button(self.settingFrame,bg=self.dg,font="arial 12 ",bd=0,text="Settings                                              ",fg=self.white,activebackground=self.lg,activeforeground=self.white,pady=7,command=self.settingsBtnFunc)
 		self.settings.grid(row=0,column=1)
 		self.settingFrame.place(rely=0.9,relwidth=1,relheight=0.09)
 		# ----------------------------------------------------------------------------------------------------------------------------
 	
 	# ----------------------------- Bottom Player Bar -----------------------------------
 	def bottomBar(self):
-		self.songImage = Button(self.playerFrame,image=self.albumIcon,bg="#333",activebackground="#444",bd=0,command=self.NowPlayingFunc)
+		self.songImage = Button(self.playerFrame,image=self.albumIcon,bg=self.dg,activebackground=self.gray,bd=0,command=self.NowPlayingFunc)
 		self.songImage.place(relheight=1,relwidth=0.12)
-		self.songName  = Button(self.playerFrame,text=self.songNameToEdit,activebackground=BOTTOMBARBRIGHT,activeforeground="#eee",borderwidth=0,bg=BOTTOMBAR,fg="#ccc",anchor='w',font="12",command=self.NowPlayingFunc)
+		self.songName  = Button(self.playerFrame,text=self.songNameToEdit,activebackground=BOTTOMBARBRIGHT,activeforeground=self.FONTC,borderwidth=0,bg=BOTTOMBAR,fg=self.FONTC,anchor='w',font="12",command=self.NowPlayingFunc)
 		self.songName.place(relwidth=0.2,relheight=1,relx=0.12)
 		backBtn = Button(self.playerFrame,image=self.backBtnIcon,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,command=self.playBack,anchor="e").place(relheight=0.6,relwidth=0.1,relx=0.32)
 		if self.Midlebutton_image==True:
@@ -184,19 +185,19 @@ class GroveMusic():
 		self.middleBtn.place(relheight=0.6,relwidth=0.12,relx=0.42)
 		nextBtn = Button(self.playerFrame,image=self.nextBtnIcon,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,command=self.playNext,anchor="w").place(relheight=0.6,relwidth=0.1,relx=0.54)
 		sliderFrame = Frame(self.playerFrame,bg=BOTTOMBAR)
-		self.songSlider = Scale(sliderFrame, from_=0, to=100, orient=HORIZONTAL,bg="#0090aa",borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=180,highlightcolor="#0090ff",command=self.go_to_pos)
+		self.songSlider = Scale(sliderFrame, from_=0, to=100, orient=HORIZONTAL,bg=self.BLUE,borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=180,highlightcolor=self.BLUE,command=self.go_to_pos)
 		self.songSlider.pack()
 		coverFrame=Frame(sliderFrame,bg=BOTTOMBAR)
 		coverFrame.place(relwidth=1,relheight=0.442)
-		self.temp_lable = Label(coverFrame,text=self.converted_current_time,bg=BOTTOMBAR,fg="#fff")
+		self.temp_lable = Label(coverFrame,text=self.converted_current_time,bg=BOTTOMBAR,fg=self.FONTC)
 		self.temp_lable.pack(side=LEFT,padx=25)
-		self.song_length_lable = Label(coverFrame,text=self.get_song_length,bg=BOTTOMBAR,fg="#fff")
+		self.song_length_lable = Label(coverFrame,text=self.get_song_length,bg=BOTTOMBAR,fg=self.FONTC)
 		self.song_length_lable.pack(side=RIGHT,padx=25)
 		sliderFrame.place(relx=0.32,relwidth=0.32,relheight=0.4,rely=0.6)
 		self.volBtn = Button(self.playerFrame,image=self.fullVol,activebackground=BOTTOMBAR,activeforeground=BOTTOMBAR,borderwidth=0,bg=BOTTOMBAR,anchor="e",command=self.vol_mute)
 		self.volBtn.place(relheight=0.6,relwidth=0.1,relx=0.64)
 		volScliderFrame = Frame(self.playerFrame,bg=BOTTOMBAR)
-		self.volScal = Scale(volScliderFrame, from_=0, to=100,command = self.vol_controll, orient=HORIZONTAL,bg="#0090aa",borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=125,highlightcolor="#0090ff")
+		self.volScal = Scale(volScliderFrame, from_=0, to=100,command = self.vol_controll, orient=HORIZONTAL,bg=self.BLUE,borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=125,highlightcolor=self.BLUE)
 		self.volScal.set(self.current_volume)
 		self.volScal.pack(pady=7)
 		self.coverframe = Frame(volScliderFrame,bg=BOTTOMBAR).place(relwidth=1,relheight=0.45)
@@ -227,7 +228,7 @@ class GroveMusic():
 	def fullViwe(self):
 		self.fullViweBtn.place_configure(relwidth=0.15)
 		self.searchFrame.place_configure(relwidth=0.94,relx=0.03)
-		self.searchBtn.configure(bg = "#212121",activebackground="#FFF",activeforeground="#AAA",image = self.searchIconDark)
+		self.searchBtn.configure(bg = "#212121",activebackground=self.white,activeforeground=self.vlg,image = self.searchIconDark)
 		self.entry.grid_configure(row = 0 ,column=0)
 		self.partitionFrame.place_configure(relx=0.05,rely=0.89,relheight = 0.001,relwidth=0.9)
 		self.partitionFrame1.place_configure(relx=0.05,rely=0.5,relheight = 0.001,relwidth=0.9)
@@ -237,7 +238,7 @@ class GroveMusic():
 	def smallViwe(self):
 		self.searchFrame.place_configure(relwidth=1,relx=0)
 		self.fullViweBtn.place_configure(relwidth=1)
-		self.searchBtn.configure(image=self.searchIcon,bg = "#313131",activebackground="#626262",activeforeground="#fff")
+		self.searchBtn.configure(image=self.searchIcon,bg = self.dg,activebackground=self.lg,activeforeground=self.white)
 		self.entry.grid_configure(row = 0 ,column=1)
 		self.partitionFrame.place_configure(relx=0.,rely=1,relheight= 0,relwidth=0)
 		self.partitionFrame1.place_configure(relx=0.,rely=1,relheight= 0,relwidth=0)
@@ -246,29 +247,29 @@ class GroveMusic():
 	# -------------------------------- Searching Window --------------------------------
 	def searchFunc(self):
 		self.MusicList.destroy()
-		self.MusicList = Frame(self.listFrame,bg="black")
+		self.MusicList = Frame(self.listFrame,bg=self.black)
 		search=self.entry.get()
-		search_label = Label(self.MusicList,text=f'Results for search "{search}"',font="arial 25",anchor=W,bg="#000",fg="#fff").place(relheight=0.2,relwidth=0.85,relx=0.05,rely=0.05)
+		search_label = Label(self.MusicList,text=f'Results for search "{search}"',font="arial 25",anchor=W,bg=self.black,fg=self.white).place(relheight=0.2,relwidth=0.85,relx=0.05,rely=0.05)
 		qury=self.mf.selectSection("songName",search)
 		if len(qury)<9:
 			try:
 				song_list.destroy()
 			except:
 				pass
-			self.secondFrame=Frame(self.MusicList,bg="#000")
+			self.secondFrame=Frame(self.MusicList,bg=self.black)
 			i=0
 			for c in qury:
 				# print(c[0])
 				if i%2 != 0:
-					play = Button(self.secondFrame,text="▶",bg="#000",fg="#aaa",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
-					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
-					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
-					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
 				else:   
-					play = Button(self.secondFrame,text="▶",bg="#444",fg="#ccc",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
-					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
-					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
-					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
 				i+=1
 			self.secondFrame.place(relheight=0.68,relwidth=0.94,relx=0.03,rely=0.28)
 		else:
@@ -277,7 +278,7 @@ class GroveMusic():
 			except:
 				pass
 			song_list = Frame(self.MusicList)
-			my_canvas =  Canvas(song_list,bg="#000")
+			my_canvas =  Canvas(song_list,bg=self.black)
 			my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
 			my_Scroll = ttk.Scrollbar(song_list,orient=VERTICAL,command = my_canvas.yview,)
 			my_Scroll.pack(side= RIGHT,fill=Y)
@@ -289,16 +290,16 @@ class GroveMusic():
 			for c in qury:
 				# print(c)
 				if i%2 != 0:
-					play = Button(self.secondFrame,text="▶",bg="#000",fg="#aaa",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
-					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
-					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
-					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
 					# print("e")
 				else:   
-					play = Button(self.secondFrame,text="▶",bg="#444",fg="#ccc",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
-					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
-					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
-					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
 					# print("e")
 					
 				i+=1
@@ -309,14 +310,14 @@ class GroveMusic():
 	# --------------------------- music List window creation ---------------------------
 	def musicFunc(self):
 		self.MusicList.destroy()
-		self.MusicList = Frame(self.listFrame,bg="black")
+		self.MusicList = Frame(self.listFrame,bg=self.black)
 		self.MusicLiveWindow(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
 
 	#------------------------------ recent window creation ------------------------------
 	def recent(self):
 		self.MusicList.destroy()
-		self.MusicList = Frame(self.listFrame,bg="black")
+		self.MusicList = Frame(self.listFrame,bg=self.black)
 		r.RecentWin(self.MusicList)
 		self.MusicList.place(relheight=1,relwidth=1)
 
@@ -336,51 +337,51 @@ class GroveMusic():
 	# ----------------------------- Now playing window --------------------------------
 	def NowPlayingFunc(self):
 		self.windowSub.destroy()
-		self.fullListWindow = Frame(self.window,bg="#000")
-		song_info_frame = Frame(self.fullListWindow,bg="#000")
-		self.songImage = Button(song_info_frame,image=self.albumIcon,bg="#333",activebackground="#444",bd=0)
+		self.fullListWindow = Frame(self.window,bg=self.black)
+		song_info_frame = Frame(self.fullListWindow,bg=self.black)
+		self.songImage = Button(song_info_frame,image=self.albumIcon,bg=self.dg,activebackground=self.gray,bd=0)
 		self.songImage.place(relheight=0.7,relwidth=0.15,rely=0.13,relx=0.08)
-		self.songName  = Button(song_info_frame,text=self.songNameToEdit,activebackground="#000",activeforeground="#fff",borderwidth=0,bg="#000",fg="#fff",anchor='w',font="arial 15 bold")
+		self.songName  = Button(song_info_frame,text=self.songNameToEdit,activebackground=self.black,activeforeground=self.white,borderwidth=0,bg=self.black,fg=self.white,anchor='w',font="arial 15 bold")
 		self.songName.place(relwidth=0.7,relheight=0.6,relx=0.25,rely=0.13)
 		song_info_frame.place(relheight=0.25,relwidth=1)
 		
-		slider_frame = Frame(self.fullListWindow,bg="#000")
-		self.temp_lable = Label(slider_frame,font="arial 13",text=self.converted_current_time,bg="#000",fg="#fff",anchor=E)
+		slider_frame = Frame(self.fullListWindow,bg=self.black)
+		self.temp_lable = Label(slider_frame,font="arial 13",text=self.converted_current_time,bg=self.black,fg=self.white,anchor=E)
 		self.temp_lable.place(relwidth=0.1,relheight=1)
-		s = Frame(slider_frame,bg="#000")
-		self.songSlider = Scale(s, from_=0, to=100, orient=HORIZONTAL,bg="#0090aa",borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg="#000",width=8,length=600,highlightcolor="#0090ff",command=self.go_to_pos)
+		s = Frame(slider_frame,bg=self.black)
+		self.songSlider = Scale(s, from_=0, to=100, orient=HORIZONTAL,bg=self.BLUE,borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=self.black,width=8,length=600,highlightcolor=self.BLUE,command=self.go_to_pos)
 		self.songSlider.pack()
-		cover = Frame(s,bg="#000")
+		cover = Frame(s,bg=self.black)
 		cover.place(relwidth=1,relheight=0.7)
 		s.place(relwidth=0.8,relx=0.1,relheight=1)
-		self.song_length_lable = Label(slider_frame,font="arial 13",text=self.get_song_length,bg="#000",fg="#fff",anchor=W)
+		self.song_length_lable = Label(slider_frame,font="arial 13",text=self.get_song_length,bg=self.black,fg=self.white,anchor=W)
 		self.song_length_lable.place(relwidth=0.1,relheight=1,relx=0.9)
 		slider_frame.place(relheight=0.05,relwidth=1,rely=0.25)
 
-		player_frame = Frame(self.fullListWindow,bg="#000")
-		backBtn = Button(player_frame,image=self.backBtnIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",command=self.playBack,anchor="e").place(relheight=1,relwidth=0.1)
+		player_frame = Frame(self.fullListWindow,bg=self.black)
+		backBtn = Button(player_frame,image=self.backBtnIcon,activebackground=self.black,activeforeground=self.black,borderwidth=0,bg=self.black,command=self.playBack,anchor="e").place(relheight=1,relwidth=0.1)
 		if self.Midlebutton_image==True:
-			self.middleBtn = Button(player_frame,image=self.pause,activebackground="#000",bg="#000",activeforeground="#000",borderwidth=0,command=self.middleBtnFunc)
+			self.middleBtn = Button(player_frame,image=self.pause,activebackground=self.black,bg=self.black,activeforeground=self.black,borderwidth=0,command=self.middleBtnFunc)
 		else:
-			self.middleBtn = Button(player_frame,image=self.play,activebackground="#000",bg="#000",activeforeground="#000",borderwidth=0,command=self.middleBtnFunc)
+			self.middleBtn = Button(player_frame,image=self.play,activebackground=self.black,bg=self.black,activeforeground=self.black,borderwidth=0,command=self.middleBtnFunc)
 
 		self.middleBtn.place(relheight=1,relwidth=0.12,relx=0.1)
-		nextBtn = Button(player_frame,image=self.nextBtnIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",command=self.playNext,anchor="w").place(relheight=1,relwidth=0.1,relx=0.22)
-		self.volBtn = Button(player_frame,image=self.fullVol,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",anchor="e",command=self.vol_mute)
+		nextBtn = Button(player_frame,image=self.nextBtnIcon,activebackground=self.black,activeforeground=self.black,borderwidth=0,bg=self.black,command=self.playNext,anchor="w").place(relheight=1,relwidth=0.1,relx=0.22)
+		self.volBtn = Button(player_frame,image=self.fullVol,activebackground=self.black,activeforeground=self.black,borderwidth=0,bg=self.black,anchor="e",command=self.vol_mute)
 		self.volBtn.place(relheight=1,relwidth=0.1,relx=0.32)
-		v = Frame(player_frame,bg="#000")
-		self.volScal = Scale(v, from_=0, to=100,command = self.vol_controll, orient=HORIZONTAL,bg="#0090aa",borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=200,highlightcolor="#0090ff")
+		v = Frame(player_frame,bg=self.black)
+		self.volScal = Scale(v, from_=0, to=100,command = self.vol_controll, orient=HORIZONTAL,bg=self.BLUE,borderwidth=0,highlightthickness=0,sliderrelief=FLAT,troughcolor="#777",fg=BOTTOMBAR,width=8,length=200,highlightcolor=self.BLUE)
 		self.volScal.set(self.current_volume)
 		self.volScal.pack(pady=8)
-		c=Frame(v,bg="#000")
+		c=Frame(v,bg=self.black)
 		c.place(relwidth=1,relheight=0.45)
 		v.place(relheight=1,relwidth=0.3,relx=0.42)
-		b=Frame(player_frame,bg="#000").place(relheight=1,relwidth=0.18,relx=0.72)
-		scaleWindow = Button(player_frame,image=self.scaleIcon,activebackground="#000",activeforeground="#000",borderwidth=0,bg="#000",anchor=W).place(relheight=1,relwidth=0.1,relx=0.9)
+		b=Frame(player_frame,bg=self.black).place(relheight=1,relwidth=0.18,relx=0.72)
+		scaleWindow = Button(player_frame,image=self.scaleIcon,activebackground=self.black,activeforeground=self.black,borderwidth=0,bg=self.black,anchor=W).place(relheight=1,relwidth=0.1,relx=0.9)
 		player_frame.place(relheight=0.1,relwidth=1,rely=0.3)
 
-		song_list_frame = Frame(self.fullListWindow,bg="blue")
-		my_canvas =  Canvas(song_list_frame,bg="#000")
+		song_list_frame = Frame(self.fullListWindow,bg=self.black)
+		my_canvas =  Canvas(song_list_frame,bg=self.black)
 		my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
 		my_Scroll = ttk.Scrollbar(song_list_frame,orient=VERTICAL,command = my_canvas.yview,)
 		my_Scroll.pack(side= RIGHT,fill=Y)
@@ -392,14 +393,14 @@ class GroveMusic():
 		for j in self.mf.getLength():
 			for i in range(j[0]):
 				c=self.mf.getSongName(i+1)
-				play = Button(self.secondFrame,text="▶",bg="#000",fg="#aaa",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
-				songName = Button(self.secondFrame,text=c[0][0],height=2,width=45,anchor="w",bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
-				artist = Button(self.secondFrame,text=c[0][1],height=2,width=18,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
-				albums = Button(self.secondFrame,text=c[0][2],height=2,width=18,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
+				play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
+				songName = Button(self.secondFrame,text=c[0][0],height=2,width=45,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
+				artist = Button(self.secondFrame,text=c[0][1],height=2,width=18,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
+				albums = Button(self.secondFrame,text=c[0][2],height=2,width=18,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
 		song_list_frame.place(relwidth=1,relheight=0.6,rely=0.4)
 
 		self.fullListWindow.place(relheight=1,relwidth=1)
-		self.cancelBtn = Button(self.window,image=self.arrowIcon,width=47,bg = "#000",activebackground="#626262",height=30,activeforeground="#fff",borderwidth=0,command=self.cancelBtnFunc)
+		self.cancelBtn = Button(self.window,image=self.arrowIcon,width=47,bg = self.black,activebackground=self.lg,height=30,activeforeground=self.white,borderwidth=0,command=self.cancelBtnFunc)
 		self.cancelBtn.place(relx=0)
 	
 	# ---------------------------- Back To Main Window ----------------------------
@@ -410,57 +411,47 @@ class GroveMusic():
 	
 	# ------------------------------- Music list window ----------------------------
 	def MusicLiveWindow(self,windowS):
-		self.mf = mm.MusicDataBase()
 		self.baseListFrame = windowS
-		self.musicListWindow = Frame(self.baseListFrame,bg="#000")
+		self.musicListWindow = Frame(self.baseListFrame,bg=self.black)
 		self.header()
 		self.musicListWindow.place(relheight=1,relwidth=1)
 
 	# ----------------------- Heading of Music List Window -------------------------
 	def header(self):
-		self.myMusicL =Label(self.musicListWindow,text="My Music",fg="#fff",font ="arial 22 ",pady=0,bg="#000")
-		self.myMusicL.place(relheight=0.08,relwidth=0.2,relx=0,rely=0.08)
+		myMusicL =Label(self.musicListWindow,text="My Music",fg=self.white,font ="arial 22 ",pady=0,bg=self.black).place(relheight=0.08,relwidth=0.2,relx=0,rely=0.08)
 
-		self.btnFrame = Frame(self.musicListWindow,bg="#000")
+		self.btnFrame = Frame(self.musicListWindow,bg=self.black)
 		self.headerBtn()
-		self.btnFrame.place(relheight=0.06,relwidth=0.9,relx=0.05,rely=0.18)
+		self.btnFrame.place(relheight=0.06,relwidth=0.6,relx=0.05,rely=0.18)
 
-		self.blueLine = Frame(self.musicListWindow,bg="#0090aa")
-		self.blueLine.place(relheight=0.01,relwidth=0.1,relx=0.05,rely=0.245)
+		line = Frame(self.musicListWindow,bg=self.white).place(relheight=0.0001,relwidth=0.9,relx=0.05,rely=0.24)
 
-		self.linePartition = Frame(self.musicListWindow,bg="#fff")
-		self.linePartition.place(relheight=0.0001,relwidth=0.9,relx=0.05,rely=0.25)
 
-		self.songListFrame = Frame(self.musicListWindow,bg="#000")
+		self.songListFrame = Frame(self.musicListWindow,bg=self.black)
 		self.musicList()
 		self.songListFrame.place(relheight=0.7,relwidth=0.94,relx=0.03,rely=0.27)
 
 	# ------------------- Buttons in Heading of Music List Window -------------------
 	def headerBtn(self):
-		self.songsBtn = Button(self.btnFrame,text="Songs",font ="arial 15 bold",fg="#aaa",bg="#000",activebackground="#222",activeforeground="#fff",borderwidth=0,command = self.songsBtnFunc)
-		self.songsBtn.grid(row =0 ,column =0)
-		self.space1 = Label(self.btnFrame,text = "         ",bg="#000")
-		self.space1.grid(row =0 ,column =1)
+		songsBtn = Button(self.btnFrame,text="Songs",font ="arial 15 bold",fg=self.vlg,bg=self.black,activebackground=self.dg,activeforeground=self.white,borderwidth=0,command = self.songsBtnFunc).place(relwidth=0.3,relheigh=0.9)
+		self.space1 = Frame(self.btnFrame,bg=self.BLUE)
+		self.space1.place(relwidth=0.3,relheigh=0.1,relx=0,rely=0.9)
 
-		self.artistBtn = Button(self.btnFrame,text="Artists",font ="arial 15 bold",fg="#aaa",bg="#000",activebackground="#222",activeforeground="#fff",borderwidth=0,command = self.artistBtnFunc)
-		self.artistBtn.grid(row =0 ,column =2)
-		self.space2 = Label(self.btnFrame,text = "         ",bg="#000")
-		self.space2.grid(row =0 ,column =3)
+		artistBtn = Button(self.btnFrame,text="Artists",font ="arial 15 bold",fg=self.vlg,bg=self.black,activebackground=self.dg,activeforeground=self.white,borderwidth=0,command = self.artistBtnFunc).place(relwidth=0.3,relheigh=0.9,relx=0.3)
 
-		self.albumsBtn = Button(self.btnFrame,text="Albums",font ="arial 15 bold",fg="#aaa",bg="#000",activebackground="#222",activeforeground="#fff",borderwidth=0,command = self.albumsBtnFunc)
-		self.albumsBtn.grid(row =0 ,column =4)
+		albumsBtn = Button(self.btnFrame,text="Albums",font ="arial 15 bold",fg=self.vlg,bg=self.black,activebackground=self.dg,activeforeground=self.white,borderwidth=0,command = self.albumsBtnFunc).place(relwidth=0.3,relheigh=0.9,relx=0.6)
 
 	# ----------------------------- Song button List ---------------------------
 	def songsBtnFunc(self):
-		self.blueLine.place_configure(relx=0.05)
+		self.space1.place_configure(relx=0)
 
 	# ----------------------------- Artist button List ---------------------------
 	def artistBtnFunc(self):
-		self.blueLine.place_configure(relx=0.193)
+		self.space1.place_configure(relx=0.3)
 
 	# ----------------------------- Ablum button List ---------------------------
 	def albumsBtnFunc(self):
-		self.blueLine.place_configure(relx=0.34)
+		self.space1.place_configure(relx=0.6)
 
 	# ---------------------------- playe List Song ------------------------------------
 	def playSong(self,x):
@@ -480,17 +471,20 @@ class GroveMusic():
 	# -------------------------------- Setting button function -------------------------------------
 	def settingsBtnFunc(self):
 		self.MusicList.destroy()
-		self.MusicList = Frame(self.listFrame,bg="black")
+		self.MusicList = Frame(self.listFrame,bg=self.black)
 		self.settingWindow()
 		self.MusicList.place(relheight=1,relwidth=1)
 
 	# ------------------------------- Create setting window -----------------------------------
 	def settingWindow(self):
-		settingLabel = Label(self.MusicList,text = "Settings",font="arial 25 ",bg="#000",fg="#fff",anchor="w").place(rely = 0.1,relwidth=0.3,relheight=0.1,relx=0.05)
-		settingMusic = Label(self.MusicList,text = "Music on this PC ",font="arial 17 ",bg="#000",fg="#fff",anchor="nw").place(rely = 0.2,relwidth=0.3,relheight=0.1,relx=0.05)
-		settingMusicBtn = Button(self.MusicList,text = "Chose where we look for music",bg="#000",fg="#0080bb",activeforeground="#fff",activebackground="#000",anchor="nw",font="14",bd=0,command=self.getMusicDir).place(rely = 0.27,relwidth=0.3,relheight=0.1,relx=0.05)
-		settingMusicBtn = Label(self.MusicList,text = "Reset location where to look for",bg="#000",fg="#fff",anchor="nw",font="16",bd=0,).place(rely = 0.33,relwidth=0.3,relheight=0.1,relx=0.05)
-		settingMusicBtn = Button(self.MusicList,text = "Reset",bg="#000",fg="#0080bb",activeforeground="#fff",activebackground="#000",anchor="nw",font="14",bd=0,command=self.deleteDb).place(rely = 0.37,relwidth=0.3,relheight=0.1,relx=0.05)
+		settingLabel = Label(self.MusicList,text = "Settings",font="arial 25 ",bg=self.black,fg=self.white,anchor="w").place(rely = 0.1,relwidth=0.3,relheight=0.1,relx=0.05)
+		settingMusic = Label(self.MusicList,text = "Music on this PC ",font="arial 17 ",bg=self.black,fg=self.white,anchor="nw").place(rely = 0.2,relwidth=0.3,relheight=0.1,relx=0.05)
+		settingMusicBtn = Button(self.MusicList,text = "Chose where we look for music",bg=self.black,fg=self.BLUE,activeforeground=self.white,activebackground=self.black,anchor="nw",font="14",bd=0,command=self.getMusicDir).place(rely = 0.27,relwidth=0.3,relheight=0.1,relx=0.05)
+		settingMusicBtn = Label(self.MusicList,text = "Reset location where to look for",bg=self.black,fg=self.white,anchor="nw",font="16",bd=0,).place(rely = 0.33,relwidth=0.3,relheight=0.1,relx=0.05)
+		settingMusicBtn = Button(self.MusicList,text = "Reset",bg=self.black,fg=self.BLUE,activeforeground=self.white,activebackground=self.black,anchor="nw",font="14",bd=0,command=self.deleteDb).place(rely = 0.37,relwidth=0.3,relheight=0.8,relx=0.05)
+		darktheame=Label(self.MusicList,text="Dark Thame",bg=self.black,fg=self.white,anchor="nw",font="16",bd=0,).place(rely = 0.46,relwidth=0.3,relheight=0.05,relx=0.05)
+		self.themeBtn=Button(self.MusicList,text = self.theme,bg=self.black,fg=self.BLUE,activeforeground=self.white,activebackground=self.black,anchor="nw",font="14",bd=0,command=self.theme_function)
+		self.themeBtn.place(rely = 0.51,relwidth=0.3,relheight=0.8,relx=0.05)
 	
 	# --------------------------------- get Music DIrectory --------------------------------
 	def getMusicDir(self):
@@ -506,7 +500,7 @@ class GroveMusic():
 		self.mf.delete_table()
 	# ---------------------------- Creting buttons in List window ----------------------
 	def musicList(self):
-		my_canvas =  Canvas(self.songListFrame,bg="#000")
+		my_canvas =  Canvas(self.songListFrame,bg=self.black)
 		my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
 		my_Scroll = ttk.Scrollbar(self.songListFrame,orient=VERTICAL,command = my_canvas.yview,)
 		my_Scroll.pack(side= RIGHT,fill=Y)
@@ -519,15 +513,15 @@ class GroveMusic():
 			for i in range(j[0]):
 				c=self.mf.getSongName(i+1)
 				if i%2 != 0:
-					play = Button(self.secondFrame,text="▶",bg="#000",fg="#aaa",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
-					songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
-					artist = Button(self.secondFrame,text=c[0][1],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
-					albums = Button(self.secondFrame,text=c[0][2],height=2,width=16,bg="#000",fg="#aaa",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
+					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[0][1],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[0][2],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
 				else:   
-					play = Button(self.secondFrame,text="▶",bg="#444",fg="#ccc",borderwidth=0,font="15",activeforeground="#fff",activebackground="#333",height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
-					songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
-					artist = Button(self.secondFrame,text=c[0][1],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
-					albums = Button(self.secondFrame,text=c[0][2],height=2,width=16,bg="#444",fg="#ccc",borderwidth=0,font="12",activeforeground="#fff",activebackground="#333",command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
+					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[0][1],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[0][2],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
 
 	# ---------------------------------- play Main fun --------------------------------------
 	def playMusic(self,y):
@@ -588,6 +582,43 @@ class GroveMusic():
 
 	def go_to_pos(self,x):
 		pass
+
+	def set_colors(self,arg):
+		self.BLUE = "#0090FF"
+		self.FONTC = "#FFf"
+		print(arg)
+		if arg :
+			print("white")
+			self.theme="Enable"
+			self.black = "#AAA"
+			self.dg = "#999"
+			self.gray = "#888"
+			self.lg = "#777"
+			self.elg = "#222"
+			self.vlg = "#313131"
+			self.white = "#000"
+		else:
+			self.theme="Disable"
+			print('')
+			self.dg = "#313131"
+			self.black = "#000"
+			self.lg = "#626262"
+			self.white = "#fff"
+			self.vlg = "#AAA"
+			self.elg = "#ccc"
+			self.gray = "#444"
+
+
+	def theme_function(self):
+		if self.theme == "Enable":
+			self.mf.write_file("true")
+			self.theme ="Disable"
+			self.themeBtn.configure(text=self.theme)
+		else:
+			self.mf.write_file("false")
+			self.theme ="Enable"
+			self.themeBtn.configure(text=self.theme)
+			
 
 
 if __name__ == "__main__":

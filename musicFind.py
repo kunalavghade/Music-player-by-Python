@@ -134,4 +134,19 @@ class MusicDataBase():
 			sp.music.stop()
 		except:
 			pass
-		
+	
+	def read_file(self):
+		try:
+			with open('config.txt', 'r') as f:
+				f_content = f.readline()
+				if f_content == "Darktheam : false":
+					return True
+				else:
+					return False
+		except :
+			self.write_file("false")
+			return True
+
+	def write_file(self,arg):
+		with open('config.txt','w') as wf:
+			wf.write(f"Darktheam : {arg}")
