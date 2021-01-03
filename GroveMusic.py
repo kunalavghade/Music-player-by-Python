@@ -10,7 +10,7 @@ BOTTOMBAR="#051C2A"
 BOTTOMBARBRIGHT="#0B3F5E"
 
 class GroveMusic():
-	# initialize root window 
+	# initialize root window
 	def __init__(self):
 		self.window = Tk()
 		self.mf = mm.MusicDataBase()
@@ -50,7 +50,6 @@ class GroveMusic():
 		self.window.resizable(False,False)
 		self.starting()
 		self.window.mainloop()
-
 	# --------------------------Looding Icon - Blue Frame---------------------------------
 	def starting(self):
 		self.GroveIcon = PhotoImage(file = "asset/Grove.png")
@@ -74,9 +73,6 @@ class GroveMusic():
 
 	# ------------------------ create functionnig window --------------------------------
 	def mainWindow(self):
-		# barWin = Frame(self.window,bg=self.white,height=10,width=800,)
-		# b=Button(barWin,text="X",bg=self.black,fg=self.black,bd=0,activebackground="#f00",activeforeground=self.white,command=self.quitWin).place(relheight=1,relx=0.94,relwidth=0.06)
-		# barWin.pack()
 		self.windowSub = Frame(self.window)
 		self.windowSub.place(relheight=1,relwidth=1)
 		self.height = 0.83
@@ -259,7 +255,6 @@ class GroveMusic():
 			self.secondFrame=Frame(self.MusicList,bg=self.black)
 			i=0
 			for c in qury:
-				# print(c[0])
 				if i%2 != 0:
 					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
 					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
@@ -288,19 +283,16 @@ class GroveMusic():
 			my_canvas.create_window((0,0),window = self.secondFrame ,anchor="nw")
 			i=0
 			for c in qury:
-				# print(c)
 				if i%2 != 0:
 					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
 					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
 					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
 					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
-					# print("e")
 				else:   
 					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
 					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
 					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
 					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
-					# print("e")
 					
 				i+=1
 			song_list.place(relheight=0.68,relwidth=0.94,relx=0.03,rely=0.28)
@@ -444,14 +436,174 @@ class GroveMusic():
 	# ----------------------------- Song button List ---------------------------
 	def songsBtnFunc(self):
 		self.space1.place_configure(relx=0)
+		self.songListFrame.destroy()
+		self.songListFrame = Frame(self.musicListWindow,bg=self.black)
+		self.musicList()
+		self.songListFrame.place(relheight=0.7,relwidth=0.94,relx=0.03,rely=0.27)
 
 	# ----------------------------- Artist button List ---------------------------
 	def artistBtnFunc(self):
 		self.space1.place_configure(relx=0.3)
+		self.songListFrame.destroy()
+		self.songListFrame = Frame(self.musicListWindow,bg=self.black)
+		artist_list=self.mf.ger_artist_list("Artist")
+		my_canvas =  Canvas(self.songListFrame,bg=self.black)
+		my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
+		my_Scroll = ttk.Scrollbar(self.songListFrame,orient=VERTICAL,command = my_canvas.yview,)
+		my_Scroll.pack(side= RIGHT,fill=Y)
+		my_canvas.configure(yscrollcommand=my_Scroll.set)
+		my_canvas.bind('<Configure>', lambda e : my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+		self.secondFrame = Frame(my_canvas,bg=self.black)
+		my_canvas.create_window((0,0),window = self.secondFrame )
+		i=0
+		for x in range((int(len(artist_list)/4)+1)):
+			for j in range(4):
+				try:
+					b=Frame(self.secondFrame,bd=5,height=200,width=172,bg=self.black)
+					btn=Button(b,image=self.albumIcon,bg=self.dg,font="arial 12 ",bd=0,fg=self.white,activebackground=self.lg,activeforeground=self.white,command=lambda x = artist_list[i] : self.create_list_artist(x)).place(relheight=0.8,relwidth=1)
+					btn1=Button(b,text=artist_list[i],bg=self.dg,font="arial 12 ",bd=0,fg=self.white,activebackground=self.lg,activeforeground=self.white,command=lambda x = artist_list[i] : self.create_list_artist(x)).place(relheight=0.2,relwidth=1,rely=0.8)
+					b.grid(row=x,column=j,)
+				except:
+					pass
+				i+=1
+		self.songListFrame.place(relheight=0.7,relwidth=0.94,relx=0.03,rely=0.32)
 
 	# ----------------------------- Ablum button List ---------------------------
 	def albumsBtnFunc(self):
 		self.space1.place_configure(relx=0.6)
+		self.songListFrame.destroy()
+		self.songListFrame = Frame(self.musicListWindow,bg=self.black)
+		list_album=self.mf.ger_artist_list("Album")
+		my_canvas =  Canvas(self.songListFrame,bg=self.black)
+		my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
+		my_Scroll = ttk.Scrollbar(self.songListFrame,orient=VERTICAL,command = my_canvas.yview,)
+		my_Scroll.pack(side= RIGHT,fill=Y)
+		my_canvas.configure(yscrollcommand=my_Scroll.set)
+		my_canvas.bind('<Configure>', lambda e : my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+		self.secondFrame = Frame(my_canvas,bg=self.black)
+		my_canvas.create_window((0,0),window = self.secondFrame)
+		i=0
+		for x in range((int(len(list_album)/4)+1)):
+			for j in range(4):
+				try:
+					b=Frame(self.secondFrame,bd=5,height=200,width=172,bg=self.black)
+					btn=Button(b,image=self.albumIcon,bg=self.dg,font="arial 12 ",bd=0,fg=self.white,activebackground=self.lg,activeforeground=self.white,command= lambda  x = list_album[i] : self.create_list_album(x)).place(relheight=0.8,relwidth=1)
+					btn1=Button(b,text=list_album[i],bg=self.dg,font="arial 12 ",bd=0,fg=self.white,activebackground=self.lg,activeforeground=self.white,command= lambda  x = list_album[i] : self.create_list_album(x)).place(relheight=0.2,relwidth=1,rely=0.8)
+					b.grid(row=x,column=j,)
+				except:
+					pass
+				i+=1
+		self.songListFrame.place(relheight=0.7,relwidth=0.94,relx=0.03,rely=0.32)
+
+	def create_list_artist(self,name):
+		qury=self.mf.selectSection("Artist",name)
+		self.songListFrame.destroy()
+		self.songListFrame = Frame(self.musicListWindow,bg=self.black)
+		if len(qury)<9:
+			try:
+				song_list.destroy()
+			except:
+				pass
+			self.secondFrame=Frame(self.songListFrame,bg=self.black)
+			i=0
+			for c in qury:
+				if i%2 != 0:
+					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				else:   
+					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				i+=1
+			self.secondFrame.place(relheight=0.68,relwidth=0.94,relx=0.03,rely=0.28)
+		else:
+			try:
+				self.secondFrame.destroy()
+			except:
+				pass
+			song_list = Frame(self.songListFrame)
+			my_canvas =  Canvas(song_list,bg=self.black)
+			my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
+			my_Scroll = ttk.Scrollbar(song_list,orient=VERTICAL,command = my_canvas.yview,)
+			my_Scroll.pack(side= RIGHT,fill=Y)
+			my_canvas.configure(yscrollcommand=my_Scroll.set)
+			my_canvas.bind('<Configure>', lambda e : my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+			self.secondFrame = Frame(my_canvas)
+			my_canvas.create_window((0,0),window = self.secondFrame ,anchor="nw")
+			i=0
+			for c in qury:
+				if i%2 != 0:
+					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				else:
+					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				i+=1
+			song_list.place(relheight=1,relwidth=1)
+		self.songListFrame.place(relheight=0.7,relwidth=0.94,relx=0.03,rely=0.32)
+
+
+	def create_list_album(self,name):
+		qury=self.mf.selectSection("Album",name)
+		self.songListFrame.destroy()
+		self.songListFrame = Frame(self.musicListWindow,bg=self.black,)
+		if len(qury)<9:
+			try:
+				song_list.destroy()
+			except:
+				pass
+			self.secondFrame=Frame(self.songListFrame,bg=self.black)
+			i=0
+			for c in qury:
+				if i%2 != 0:
+					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				else:   
+					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				i+=1
+			self.secondFrame.place(relheight=0.68,relwidth=0.94,relx=0.03,rely=0.28)
+		else:
+			try:
+				self.secondFrame.destroy()
+			except:
+				pass
+			song_list = Frame(self.songListFrame)
+			my_canvas =  Canvas(song_list,bg=self.black)
+			my_canvas.pack(fill=BOTH,expand=1,side=LEFT)
+			my_Scroll = ttk.Scrollbar(song_list,orient=VERTICAL,command = my_canvas.yview,)
+			my_Scroll.pack(side= RIGHT,fill=Y)
+			my_canvas.configure(yscrollcommand=my_Scroll.set)
+			my_canvas.bind('<Configure>', lambda e : my_canvas.configure(scrollregion = my_canvas.bbox("all")))
+			self.secondFrame = Frame(my_canvas)
+			my_canvas.create_window((0,0),window = self.secondFrame ,anchor="nw")
+			i=0
+			for c in qury:
+				if i%2 != 0:
+					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = c[0] : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				else:
+					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=0)
+					songName = Button(self.secondFrame,text=c[2],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=1)
+					artist = Button(self.secondFrame,text=c[3],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=2)
+					albums = Button(self.secondFrame,text=c[4],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = (int(c[0])-1) : self.playSong(x)).grid(row=i,column=3)
+				i+=1
+			song_list.place(relheight=1,relwidth=1)
+		self.songListFrame.place(relheight=0.7,relwidth=0.94,relx=0.03,rely=0.32)
+
 
 	# ---------------------------- playe List Song ------------------------------------
 	def playSong(self,x):
@@ -498,6 +650,7 @@ class GroveMusic():
 	# --------------------------------- Reset DataBase ------------------------------------
 	def deleteDb(self):
 		self.mf.delete_table()
+
 	# ---------------------------- Creting buttons in List window ----------------------
 	def musicList(self):
 		my_canvas =  Canvas(self.songListFrame,bg=self.black)
@@ -508,7 +661,6 @@ class GroveMusic():
 		my_canvas.bind('<Configure>', lambda e : my_canvas.configure(scrollregion = my_canvas.bbox("all")))
 		self.secondFrame = Frame(my_canvas)
 		my_canvas.create_window((0,0),window = self.secondFrame ,anchor="nw")
-		images = PhotoImage(file = 'asset/searchP.png')
 		for j in self.mf.getLength():
 			for i in range(j[0]):
 				c=self.mf.getSongName(i+1)
@@ -586,9 +738,7 @@ class GroveMusic():
 	def set_colors(self,arg):
 		self.BLUE = "#0090FF"
 		self.FONTC = "#FFf"
-		print(arg)
 		if arg :
-			print("white")
 			self.theme="Enable"
 			self.black = "#AAA"
 			self.dg = "#999"
@@ -599,7 +749,6 @@ class GroveMusic():
 			self.white = "#000"
 		else:
 			self.theme="Disable"
-			print('')
 			self.dg = "#313131"
 			self.black = "#000"
 			self.lg = "#626262"

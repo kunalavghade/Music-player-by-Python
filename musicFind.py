@@ -150,3 +150,11 @@ class MusicDataBase():
 	def write_file(self,arg):
 		with open('config.txt','w') as wf:
 			wf.write(f"Darktheam : {arg}")
+
+	def ger_artist_list(self,arg):
+		b=self.cor.execute(f'SELECT {arg} FROM "main"."MusicLIB" WHERE "{arg}" NOT LIKE "unknown {arg}"').fetchall()
+		artist_list=[f"unknown {arg}"]
+		for i in b:
+			artist_list.append(i[0])		
+		return artist_list
+
