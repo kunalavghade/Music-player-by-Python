@@ -42,11 +42,13 @@ class GroveMusic():
 		self.arrowIcon = PhotoImage(file="asset/Arrow.png")		
 		self.settingIcon = PhotoImage(file="asset/setting.png")
 		self.set_colors(self.mf.read_file())
+		self.songs_arr = []
+		for i in range(self.mf.getLength()[0][0]):
+			self.songs_arr.append(self.mf.getSongName(i+1))
 		
 		self.window.title("Grove Music")
 		self.window.geometry("800x650+270+60")
 		self.window.wm_overrideredirect(True)
-
 		self.window.resizable(False,False)
 		self.starting()
 		self.window.mainloop()
@@ -211,6 +213,7 @@ class GroveMusic():
 				self.cliked = False
 			self.fullViwe()
 			self.searchBtn.configure(command= self.searchFunc)
+			self.window.bind('<Return>',self.searchFunc)
 		else :
 			for i in range(0,341):
 				self.width = (400-i)/1000
@@ -218,6 +221,7 @@ class GroveMusic():
 				self.listFrame.place_configure(relheight = self.height,relwidth = (1-self.width),relx = self.width)
 				self.cliked = True
 			self.searchBtn.configure(command= self.resizeViwe)
+			self.window.unbind('<Return>')		
 			self.smallViwe()
 
 	# ------------------------- Right Bar miximized (function) --------------------------
@@ -241,7 +245,7 @@ class GroveMusic():
 		self.searchBtn.grid_configure(row = 0 ,column=0)
 
 	# -------------------------------- Searching Window --------------------------------
-	def searchFunc(self):
+	def searchFunc(self,exp=0):
 		self.MusicList.destroy()
 		self.MusicList = Frame(self.listFrame,bg=self.black)
 		search=self.entry.get()
@@ -382,13 +386,13 @@ class GroveMusic():
 		self.secondFrame = Frame(my_canvas)
 		my_canvas.create_window((0,0),window = self.secondFrame ,anchor="nw")
 		images = PhotoImage(file = 'asset/searchP.png')
-		for j in self.mf.getLength():
-			for i in range(j[0]):
-				c=self.mf.getSongName(i+1)
-				play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
-				songName = Button(self.secondFrame,text=c[0][0],height=2,width=45,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
-				artist = Button(self.secondFrame,text=c[0][1],height=2,width=18,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
-				albums = Button(self.secondFrame,text=c[0][2],height=2,width=18,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
+		i = 0
+		for c in self.songs_arr:
+			play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
+			songName = Button(self.secondFrame,text=c[0][0],height=2,width=45,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
+			artist = Button(self.secondFrame,text=c[0][1],height=2,width=18,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
+			albums = Button(self.secondFrame,text=c[0][2],height=2,width=18,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
+			i+=1
 		song_list_frame.place(relwidth=1,relheight=0.6,rely=0.4)
 
 		self.fullListWindow.place(relheight=1,relwidth=1)
@@ -661,19 +665,20 @@ class GroveMusic():
 		my_canvas.bind('<Configure>', lambda e : my_canvas.configure(scrollregion = my_canvas.bbox("all")))
 		self.secondFrame = Frame(my_canvas)
 		my_canvas.create_window((0,0),window = self.secondFrame ,anchor="nw")
-		for j in self.mf.getLength():
-			for i in range(j[0]):
-				c=self.mf.getSongName(i+1)
-				if i%2 != 0:
-					play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
-					songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
-					artist = Button(self.secondFrame,text=c[0][1],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
-					albums = Button(self.secondFrame,text=c[0][2],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
-				else:   
-					play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
-					songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
-					artist = Button(self.secondFrame,text=c[0][1],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
-					albums = Button(self.secondFrame,text=c[0][2],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
+		i = 0
+		for c in self.songs_arr:
+			if i%2 != 0:
+				play = Button(self.secondFrame,text="▶",bg=self.black,fg=self.vlg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
+				songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
+				artist = Button(self.secondFrame,text=c[0][1],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
+				albums = Button(self.secondFrame,text=c[0][2],height=2,width=16,bg=self.black,fg=self.vlg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
+				i+=1
+			else:   
+				play = Button(self.secondFrame,text="▶",bg=self.gray,fg=self.elg,borderwidth=0,font="15",activeforeground=self.white,activebackground=self.dg,height=2,width=5,command = lambda x = i : self.playSong(x)).grid(row=i,column=0)
+				songName = Button(self.secondFrame,text=c[0][0],height=2,width=38,anchor="w",bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=1)
+				artist = Button(self.secondFrame,text=c[0][1],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=2)
+				albums = Button(self.secondFrame,text=c[0][2],height=2,width=16,bg=self.gray,fg=self.elg,borderwidth=0,font="12",activeforeground=self.white,activebackground=self.dg,command = lambda x = i : self.playSong(x)).grid(row=i,column=3)
+				i+=1
 
 	# ---------------------------------- play Main fun --------------------------------------
 	def playMusic(self,y):
@@ -685,7 +690,7 @@ class GroveMusic():
 		self.path=c[0][0]+"\\"+c[0][1]+c[0][2]
 		self.middleBtnClick = True
 		self.mf.playFile(self.path)
-		self.get_time()
+		self.get_time()		
 		self.middleBtnFunc()
 
 	# ------------------------------- controll Volume -----------------------------------
@@ -757,7 +762,6 @@ class GroveMusic():
 			self.elg = "#ccc"
 			self.gray = "#444"
 
-
 	def theme_function(self):
 		if self.theme == "Enable":
 			self.mf.write_file("true")
@@ -767,9 +771,8 @@ class GroveMusic():
 			self.mf.write_file("false")
 			self.theme ="Enable"
 			self.themeBtn.configure(text=self.theme)
-			
 
-
+		
 if __name__ == "__main__":
 	GroveMusic()
 	
