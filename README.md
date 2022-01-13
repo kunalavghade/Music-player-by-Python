@@ -52,13 +52,13 @@ pip install eyed3
 Clone the project
 
 ```bash
-  git clone https://github.com/kunalavghade/iMart.git
+  git clone https://github.com/kunalavghade/Music-player-by-Python.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd iMart
+  cd "Music Player"
 ```
 
 Inside iMart folder click on GroveMusic.py or run
